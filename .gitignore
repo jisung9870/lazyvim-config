@@ -1,0 +1,12 @@
+# Lazy.nvim 플러그인 (설치는 각 머신에서 자동으로 됨)
+# lazy-lock.json
+
+# Neovim 런타임 생성 파일
+spell/
+.luarc.json
+
+# 플러그인 데이터/캐시
+plugin/
+
+# Mason 설치 바이너리 (OS별로 다름)
+# mason은 nvim-data에 저장되므로 보통 여기 없음
