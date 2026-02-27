@@ -14,6 +14,7 @@ map("i", "jk", "<ESC>", { desc = "Exit insert mode" })
 -- 버퍼 이동 (여러 파일 작업 시 필수)
 -- ========================================
 -- deployment.yaml → service.yaml → ingress.yaml 사이를 H, L로 이동
+-- 참고: LazyVim 기본 <S-h>/<S-l>과 동일 (vim 기본 H/L 화면이동을 덮어씀)
 
 map("n", "H", "<cmd>bprevious<cr>", { desc = "Prev buffer" })
 map("n", "L", "<cmd>bnext<cr>", { desc = "Next buffer" })

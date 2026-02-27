@@ -32,8 +32,13 @@ return {
       shell = vim.o.shell,
       float_opts = {
         border = "curved",
-        width = math.floor(vim.o.columns * 0.8),
-        height = math.floor(vim.o.lines * 0.8),
+        -- 함수로 설정하여 창 크기 변경 시에도 올바른 비율 유지
+        width = function()
+          return math.floor(vim.o.columns * 0.8)
+        end,
+        height = function()
+          return math.floor(vim.o.lines * 0.8)
+        end,
         winblend = 0,
       },
     },

@@ -10,6 +10,10 @@
 -- 해결:
 --   파일 타입별로 포맷터와 동작 방식을 다르게 설정
 --
+-- 참고:
+--   HCL (Alloy) 포맷터는 lang-devops.lua에서 설정
+--   (alloy CLI 유무에 따른 condition 처리 포함)
+--
 -- 이미 있는 기능:
 --   <Space>cf  → 수동 포맷
 --   <Space>uf  → 자동 포맷 전역 토글
@@ -47,9 +51,6 @@ return {
 
       -- Markdown: 포맷터 없음 (의도적 공백 보존)
       markdown = {},
-
-      -- HCL (Alloy): 커스텀 포맷터 (alloy.lua에서 이미 설정했다면 중복 주의)
-      -- hcl = { "alloy_space" },
 
       -- 그 외: LSP 포맷터 사용
       ["_"] = { "trim_whitespace" },

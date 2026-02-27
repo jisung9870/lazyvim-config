@@ -4,17 +4,32 @@
 
 return {
   -- ==============================
-  -- 1. 한/영 자동 전환 (macism 사용)
+  -- 1. 한/영 자동 전환 (macOS 전용, macism 사용)
   -- ==============================
   -- Normal 모드 진입 시 자동으로 영문(ABC)으로 전환
   -- 설치: brew install macism
+  -- WSL/Linux에서는 자동으로 비활성화됨
   {
     "keaising/im-select.nvim",
     event = "InsertEnter",
-    opts = {
-      default_im_select = "com.apple.keylayout.ABC",
-      default_command = "macism",
-    },
+    opts = function()
+      if vim.fn.has("mac") == 1 then
+        return {
+          default_im_select = "com.apple.keylayout.ABC",
+          default_command = "macism",
+        }
+      elseif vim.fn.has("wsl") == 1 then
+        return {
+          default_im_select = "1033",
+          default_command = "im-select.exe",
+        }
+      else
+        return {
+          default_im_select = "",
+          default_command = "",
+        }
+      end
+    end,
   },
 
   -- ==============================

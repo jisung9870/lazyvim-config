@@ -1,9 +1,6 @@
 -- Options are automatically loaded before lazy.nvim startup
--- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
+-- Default options: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
-
--- lazyvim default는 conform.setup({ format_on_save = ... })로 되어 있음
--- 여기에 markdown 제외 옵션을 추가
 
 local opt = vim.opt
 
@@ -40,7 +37,7 @@ opt.smartcase = true -- 대문자 포함 시 대소문자 구분
 opt.scrolloff = 8 -- 스크롤 여백
 opt.sidescrolloff = 8
 opt.pumheight = 15 -- 팝업 메뉴 높이
-opt.colorcolumn = "100" -- 100자 가이드
+opt.colorcolumn = "120" -- 120자 가이드 (stylua.toml column_width와 통일)
 
 opt.splitright = true -- 수직 분할 오른쪽
 opt.splitbelow = true -- 수평 분할 아래
@@ -70,3 +67,15 @@ opt.fillchars = {
 
 opt.updatetime = 200 -- 빠른 업데이트
 opt.timeoutlen = 300 -- 키 입력 대기 시간
+
+-- ========================================
+-- 머신별 로컬 설정 오버라이드
+-- ========================================
+-- lua/config/local.lua는 .gitignore에 추가되어 있음
+-- 각 머신에서 고유한 설정을 넣을 수 있음
+-- 예: WSL 전용 클립보드 설정, macOS 전용 폰트 등
+
+local local_config = vim.fn.stdpath("config") .. "/lua/config/local.lua"
+if vim.fn.filereadable(local_config) == 1 then
+  dofile(local_config)
+end
