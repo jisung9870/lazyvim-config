@@ -26,6 +26,7 @@ return {
   -- ==============================
   -- .alloy 파일의 filetype 감지 + 유효성 검사는 autocmds.lua에서 처리
   -- 여기서는 conform.nvim에 alloy 포맷터만 등록
+  -- alloy CLI가 없는 머신에서는 condition으로 자동 비활성화
   {
     "stevearc/conform.nvim",
     opts = {
@@ -37,6 +38,9 @@ return {
           command = "sh",
           args = { "-c", "alloy fmt - | expand -t 2" },
           stdin = true,
+          condition = function()
+            return vim.fn.executable("alloy") == 1
+          end,
         },
       },
     },
@@ -75,27 +79,4 @@ return {
       },
     },
   },
-
-  -- ==============================
-  -- 4. YAML 스키마 추가 (extras.lang.yaml 위에)
-  -- ==============================
-  -- extras가 yamlls + SchemaStore를 설정하지만,
-  -- 커스텀 스키마 매핑이 필요하면 아래 추가
-  -- {
-  --   "neovim/nvim-lspconfig",
-  --   opts = {
-  --     servers = {
-  --       yamlls = {
-  --         settings = {
-  --           yaml = {
-  --             schemas = {
-  --               ["https://json.schemastore.org/kustomization.json"] = "kustomization.{yml,yaml}",
-  --               ["https://json.schemastore.org/helmfile.json"] = "helmfile.{yml,yaml}",
-  --             },
-  --           },
-  --         },
-  --       },
-  --     },
-  --   },
-  -- },
 }

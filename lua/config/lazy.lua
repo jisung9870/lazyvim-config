@@ -19,20 +19,11 @@ require("lazy").setup({
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
     -- ==============================
-    -- LazyVim Extras (언어 지원)
+    -- LazyVim Extras
     -- ==============================
-    -- Go: gopls + gofumpt + goimports + gomodifytags + impl + delve 자동 설치
-    { import = "lazyvim.plugins.extras.lang.go" },
-    -- YAML: yamlls + Kubernetes/Docker Compose 스키마 자동 검증
-    { import = "lazyvim.plugins.extras.lang.yaml" },
-    -- JSON: jsonls + SchemaStore 연동
-    { import = "lazyvim.plugins.extras.lang.json" },
-    -- Terraform: terraform-ls + tflint
-    { import = "lazyvim.plugins.extras.lang.terraform" },
-    -- Ansible: ansiblels + ansible-lint (LazyVim 11.x+)
-    { import = "lazyvim.plugins.extras.lang.ansible" },
-    -- DAP 코어 (디버거 UI)
-    { import = "lazyvim.plugins.extras.dap.core" },
+    -- extras는 lazyvim.json에서 관리 (:LazyExtras UI 사용)
+    -- lazyvim.json에 선언된 extras는 자동으로 로드되므로
+    -- 여기서 중복 import할 필요 없음
 
     -- 커스텀 플러그인
     { import = "plugins" },

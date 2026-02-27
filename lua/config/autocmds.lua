@@ -15,10 +15,13 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   end,
 })
 
--- 저장 시 alloy validate 실행
+-- 저장 시 alloy validate 실행 (alloy CLI가 설치된 경우에만)
 vim.api.nvim_create_autocmd("BufWritePost", {
   pattern = "*.alloy",
   callback = function()
+    if vim.fn.executable("alloy") ~= 1 then
+      return
+    end
     local file = vim.fn.expand("%:p")
     local result = vim.fn.system("alloy validate " .. vim.fn.shellescape(file))
     if vim.v.shell_error ~= 0 then
