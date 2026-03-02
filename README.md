@@ -54,6 +54,16 @@ vim.g.clipboard = {
 }
 ```
 
+## 초기 설정
+
+```bash
+# macOS
+./scripts/setup-macos.sh
+
+# WSL/Linux
+./scripts/setup-wsl.sh
+```
+
 ## Extras (lazyvim.json)
 
 `:LazyExtras`로 관리. 주요 활성화 항목:
