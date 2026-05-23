@@ -209,7 +209,7 @@ TPM_DIR="$HOME/.tmux/plugins/tpm"
 if [ ! -d "$TPM_DIR" ]; then
   info "tmux TPM 설치 중..."
   git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
-  ok "TPM 설치 완료 (tmux 시작 후 prefix + I 로 플러그인 설치)"
+  ok "TPM 설치 완료"
 else
   ok "TPM 이미 설치됨"
 fi
@@ -280,6 +280,13 @@ elif [ -L "$TMUX_CONFIG_DEST" ]; then
     warn "tmux 심볼릭 링크가 다른 경로를 가리킴: $CURRENT_TMUX_TARGET"
     warn "수동으로 확인 후 변경하세요: ln -sf $TMUX_CONFIG_SRC $TMUX_CONFIG_DEST"
   fi
+fi
+
+# TPM 플러그인 자동 설치 (.tmux.conf 의 @plugin 선언 기준)
+if [ -x "$TPM_DIR/bin/install_plugins" ]; then
+  info "tmux 플러그인 설치 중 (TPM)..."
+  "$TPM_DIR/bin/install_plugins" >/dev/null
+  ok "tmux 플러그인 설치 완료"
 fi
 
 # ========================================
