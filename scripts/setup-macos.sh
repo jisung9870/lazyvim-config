@@ -255,7 +255,35 @@ elif [ -L "$NVIM_CONFIG_DIR" ]; then
 fi
 
 # ========================================
-# 11. macOS local.lua 생성 (없는 경우)
+# 11. tmux 설정 심볼릭 링크
+# ========================================
+TMUX_CONFIG_SRC="$SCRIPT_DIR/scripts/config/.tmux.conf"
+TMUX_CONFIG_DEST="$HOME/.tmux.conf"
+
+if [ -f "$TMUX_CONFIG_DEST" ] && [ ! -L "$TMUX_CONFIG_DEST" ]; then
+  warn "기존 tmux 설정 발견: $TMUX_CONFIG_DEST"
+  TMUX_BACKUP="${TMUX_CONFIG_DEST}.backup.$(date +%Y%m%d%H%M%S)"
+  info "백업 생성: $TMUX_BACKUP"
+  mv "$TMUX_CONFIG_DEST" "$TMUX_BACKUP"
+  ok "기존 tmux 설정 백업 완료"
+fi
+
+if [ ! -e "$TMUX_CONFIG_DEST" ]; then
+  info ".tmux.conf 심볼릭 링크 생성..."
+  ln -s "$TMUX_CONFIG_SRC" "$TMUX_CONFIG_DEST"
+  ok "심볼릭 링크 생성: $TMUX_CONFIG_DEST -> $TMUX_CONFIG_SRC"
+elif [ -L "$TMUX_CONFIG_DEST" ]; then
+  CURRENT_TMUX_TARGET=$(readlink "$TMUX_CONFIG_DEST")
+  if [ "$CURRENT_TMUX_TARGET" = "$TMUX_CONFIG_SRC" ]; then
+    ok "tmux 심볼릭 링크 이미 올바르게 설정됨"
+  else
+    warn "tmux 심볼릭 링크가 다른 경로를 가리킴: $CURRENT_TMUX_TARGET"
+    warn "수동으로 확인 후 변경하세요: ln -sf $TMUX_CONFIG_SRC $TMUX_CONFIG_DEST"
+  fi
+fi
+
+# ========================================
+# 12. macOS local.lua 생성 (없는 경우)
 # ========================================
 LOCAL_LUA="$SCRIPT_DIR/lua/config/local.lua"
 if [ ! -f "$LOCAL_LUA" ]; then
