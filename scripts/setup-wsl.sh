@@ -391,6 +391,13 @@ elif [ -L "$TMUX_CONFIG_DEST" ]; then
   fi
 fi
 
+# TPM 플러그인 자동 설치 (.tmux.conf 의 @plugin 선언 기준)
+if [ -x "$TPM_DIR/bin/install_plugins" ]; then
+  info "tmux 플러그인 설치 중 (TPM)..."
+  "$TPM_DIR/bin/install_plugins" >/dev/null
+  ok "tmux 플러그인 설치 완료"
+fi
+
 # ========================================
 # 13. local.lua 생성 (없는 경우)
 # ========================================
