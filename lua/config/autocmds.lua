@@ -92,3 +92,16 @@ vim.api.nvim_create_autocmd("InsertLeave", {
     vim.opt.cursorline = true
   end,
 })
+
+-- 커서가 멈추면 자동으로 diagnostic float 띄우기
+vim.api.nvim_create_autocmd("CursorHold", {
+  callback = function()
+    vim.diagnostic.open_float(nil, {
+      focusable = false,
+      close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+      border = "rounded",
+      source = "always", -- 어떤 LSP에서 온 메시지인지 표시
+      scope = "cursor", -- 커서 위치의 진단만
+    })
+  end,
+})

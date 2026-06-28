@@ -25,7 +25,7 @@ error() { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
 # asdf로 설치할 런타임 버전 (필요 시 수정)
 # ========================================
 GOLANG_VERSION="1.23.5"
-NODEJS_VERSION="22.13.1"
+NODEJS_VERSION="24.15.0"
 PYTHON_VERSION="3.13.1"
 
 # ========================================
@@ -81,13 +81,13 @@ done
 # ========================================
 # 4. 한/영 전환 (macism)
 # ========================================
-if ! command -v macism &>/dev/null; then
-  info "macism 설치 중 (한/영 자동 전환)..."
-  brew install macism
-  ok "macism 설치 완료"
-else
-  ok "macism 이미 설치됨"
-fi
+##if ! command -v macism &>/dev/null; then
+#  info "macism 설치 중 (한/영 자동 전환)..."
+#  brew install macism
+#  ok "macism 설치 완료"
+#else
+#  ok "macism 이미 설치됨"
+#fi
 
 # ========================================
 # 5. asdf 런타임 설치
@@ -217,14 +217,14 @@ fi
 # ========================================
 # 9. Nerd Font (JetBrainsMono)
 # ========================================
-if ! system_profiler SPFontsDataType 2>/dev/null | grep -qi "JetBrainsMono"; then
-  info "JetBrainsMono Nerd Font 설치 중..."
-  brew install --cask font-jetbrains-mono-nerd-font
-  ok "JetBrainsMono Nerd Font 설치 완료"
-  warn "터미널 앱에서 폰트를 'JetBrainsMono Nerd Font'로 변경해주세요"
-else
-  ok "JetBrainsMono Nerd Font 이미 설치됨"
-fi
+#if ! system_profiler SPFontsDataType 2>/dev/null | grep -qi "JetBrainsMono"; then
+#  info "JetBrainsMono Nerd Font 설치 중..."
+#  brew install --cask font-jetbrains-mono-nerd-font
+#  ok "JetBrainsMono Nerd Font 설치 완료"
+#  warn "터미널 앱에서 폰트를 'JetBrainsMono Nerd Font'로 변경해주세요"
+#else
+#  ok "JetBrainsMono Nerd Font 이미 설치됨"
+#fi
 
 # ========================================
 # 10. Neovim 설정 심볼릭 링크
@@ -232,27 +232,27 @@ fi
 NVIM_CONFIG_DIR="$HOME/.config/nvim"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-if [ -d "$NVIM_CONFIG_DIR" ] && [ ! -L "$NVIM_CONFIG_DIR" ]; then
-  warn "기존 nvim 설정 발견: $NVIM_CONFIG_DIR"
-  BACKUP_DIR="${NVIM_CONFIG_DIR}.backup.$(date +%Y%m%d%H%M%S)"
-  info "백업 생성: $BACKUP_DIR"
-  mv "$NVIM_CONFIG_DIR" "$BACKUP_DIR"
-  ok "기존 설정 백업 완료"
-fi
-
-if [ ! -d "$NVIM_CONFIG_DIR" ] && [ ! -L "$NVIM_CONFIG_DIR" ]; then
-  info "설정 디렉토리 심볼릭 링크 생성..."
-  ln -s "$SCRIPT_DIR" "$NVIM_CONFIG_DIR"
-  ok "심볼릭 링크 생성: $NVIM_CONFIG_DIR -> $SCRIPT_DIR"
-elif [ -L "$NVIM_CONFIG_DIR" ]; then
-  CURRENT_TARGET=$(readlink "$NVIM_CONFIG_DIR")
-  if [ "$CURRENT_TARGET" = "$SCRIPT_DIR" ]; then
-    ok "심볼릭 링크 이미 올바르게 설정됨"
-  else
-    warn "심볼릭 링크가 다른 경로를 가리킴: $CURRENT_TARGET"
-    warn "수동으로 확인 후 변경하세요: ln -sf $SCRIPT_DIR $NVIM_CONFIG_DIR"
-  fi
-fi
+#if [ -d "$NVIM_CONFIG_DIR" ] && [ ! -L "$NVIM_CONFIG_DIR" ]; then
+#  warn "기존 nvim 설정 발견: $NVIM_CONFIG_DIR"
+#  BACKUP_DIR="${NVIM_CONFIG_DIR}.backup.$(date +%Y%m%d%H%M%S)"
+#  info "백업 생성: $BACKUP_DIR"
+#  mv "$NVIM_CONFIG_DIR" "$BACKUP_DIR"
+#  ok "기존 설정 백업 완료"
+#fi
+#
+#if [ ! -d "$NVIM_CONFIG_DIR" ] && [ ! -L "$NVIM_CONFIG_DIR" ]; then
+#  info "설정 디렉토리 심볼릭 링크 생성..."
+#  ln -s "$SCRIPT_DIR" "$NVIM_CONFIG_DIR"
+#  ok "심볼릭 링크 생성: $NVIM_CONFIG_DIR -> $SCRIPT_DIR"
+#elif [ -L "$NVIM_CONFIG_DIR" ]; then
+#  CURRENT_TARGET=$(readlink "$NVIM_CONFIG_DIR")
+#  if [ "$CURRENT_TARGET" = "$SCRIPT_DIR" ]; then
+#    ok "심볼릭 링크 이미 올바르게 설정됨"
+#  else
+#    warn "심볼릭 링크가 다른 경로를 가리킴: $CURRENT_TARGET"
+#    warn "수동으로 확인 후 변경하세요: ln -sf $SCRIPT_DIR $NVIM_CONFIG_DIR"
+#  fi
+#fi
 
 # ========================================
 # 11. tmux 설정 심볼릭 링크
@@ -292,7 +292,7 @@ fi
 # ========================================
 # 12. macOS local.lua 생성 (없는 경우)
 # ========================================
-LOCAL_LUA="$SCRIPT_DIR/lua/config/local.lua"
+LOCAL_LUA="$HOME/.config/nvim/lua/config/local.lua"
 if [ ! -f "$LOCAL_LUA" ]; then
   info "macOS local.lua 템플릿 생성 중..."
   cat > "$LOCAL_LUA" << 'LOCALEOF'

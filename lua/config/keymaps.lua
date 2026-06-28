@@ -53,3 +53,30 @@ map("n", "<leader>a", "ggVG", { desc = "Select all" })
 -- 선택 영역을 교체할 때 원본이 레지스터에서 사라지지 않음
 
 map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
+
+-- 현재 파일을 Typora로 열기 (md 파일일 때만)
+map("n", "<leader>mt", function()
+  local file = vim.fn.expand("%:p")
+  local ft = vim.bo.filetype
+  if ft == "markdown" then
+    vim.fn.jobstart({ "open", "-a", "Typora", file }, { detach = true })
+    vim.notify("Opened in Typora: " .. file, vim.log.levels.INFO)
+  else
+    vim.notify("Not a markdown file", vim.log.levels.WARN)
+  end
+end, { desc = "Open in Typora" })
+
+-- 현재 프로젝트에 .venv 생성
+map("n", "<leader>cV", function()
+  local cwd = vim.fn.getcwd()
+  vim.fn.jobstart({ "python", "-m", "venv", cwd .. "/.venv" }, {
+    on_exit = function(_, code)
+      if code == 0 then
+        vim.notify("venv created at " .. cwd .. "/.venv", vim.log.levels.INFO)
+        vim.cmd("VenvSelectCached")
+      else
+        vim.notify("Failed to create venv", vim.log.levels.ERROR)
+      end
+    end,
+  })
+end, { desc = "Create .venv in cwd" })

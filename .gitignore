@@ -4,6 +4,7 @@
 # Neovim 런타임 생성 파일
 spell/
 .luarc.json
+lua/config/local.lua
 
 # 플러그인 데이터/캐시
 plugin/
