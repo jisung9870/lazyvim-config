@@ -13,6 +13,8 @@ source "$SCRIPT_DIR/scripts/lib/setup-common.sh"
 source "$SCRIPT_DIR/scripts/lib/setup-versions.sh"
 parse_setup_flags "$@"
 print_mode_summary
+sync_repository
+sync_plugins
 require_supported_linux
 
 IS_WSL=false
@@ -307,6 +309,11 @@ ensure_tpm() {
     return 0
   fi
 
+  if [ "$INSTALL" != true ]; then
+    check_tpm_status
+    return 0
+  fi
+
   if [ -d "$tpm_dir" ]; then
     ok "TPM 이미 설치됨"
   else
@@ -464,7 +471,7 @@ fi
 
 echo ""
 echo -e "${GREEN}========================================${NC}"
-if [ "$INSTALL" = true ] || [ "$LINK" = true ] || [ "$WITH_FONT" = true ] || [ "$WITH_IM" = true ] || [ "$WITH_TMUX_PLUGINS" = true ]; then
+if [ "$INSTALL" = true ] || [ "$LINK" = true ] || [ "$SYNC" = true ] || [ "$SYNC_PLUGINS" = true ] || [ "$WITH_FONT" = true ] || [ "$WITH_IM" = true ] || [ "$WITH_TMUX_PLUGINS" = true ]; then
   echo -e "${GREEN}  설정 완료${NC}"
 else
   echo -e "${GREEN}  점검 완료${NC}"
@@ -478,7 +485,7 @@ echo "asdf 현재 상태:"
 asdf current 2>/dev/null || true
 echo ""
 echo "다음 단계:"
-echo "  1. 변경 전 확인: ./scripts/setup-wsl.sh --install --link --with-font --with-im --with-tmux-plugins --dry-run"
+echo "  1. 변경 전 확인: ./scripts/setup.sh --type wsl --install --link --with-font --with-im --with-tmux-plugins --dry-run"
 if [ "$IS_WSL" = true ]; then
   echo "  2. Windows Terminal 폰트를 'JetBrainsMono Nerd Font'로 변경"
   echo "  3. 새 터미널 세션을 열어 PATH 갱신"
@@ -487,5 +494,5 @@ else
 fi
 echo "  4. nvim 실행 -> 플러그인 자동 설치 대기"
 echo "  5. :checkhealth 로 상태 확인"
-echo "  6. :Lazy restore 로 플러그인 버전 동기화"
+echo "  6. ./scripts/setup.sh --type wsl --sync --sync-plugins 로 repo/plugin 버전 동기화"
 echo ""

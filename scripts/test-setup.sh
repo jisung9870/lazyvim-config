@@ -3,9 +3,23 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_DIR="$SCRIPT_DIR"
 cd "$SCRIPT_DIR"
+tmp_sync_dir=""
+tmp_dir=""
+
+cleanup() {
+  if [ -n "$tmp_sync_dir" ]; then
+    rm -rf "$tmp_sync_dir"
+  fi
+  if [ -n "$tmp_dir" ]; then
+    rm -rf "$tmp_dir"
+  fi
+}
+trap cleanup EXIT
 
 FILES=(
+  scripts/setup.sh
   scripts/setup-macos.sh
   scripts/setup-wsl.sh
   scripts/lib/setup-common.sh
@@ -38,16 +52,55 @@ else
 fi
 
 info "help 출력 검사"
+./scripts/setup.sh --help >/dev/null
+ok "통합 setup help 출력 통과"
+
 ./scripts/setup-macos.sh --help >/dev/null
 ok "macOS help 출력 통과"
 
+./scripts/setup.sh --type macos --help >/dev/null
+ok "통합 setup macOS help 위임 통과"
+
+./scripts/setup.sh --type wsl --help >/dev/null
+ok "통합 setup WSL help 위임 통과"
+
 info "macOS dry-run 검사"
+./scripts/setup.sh --type macos --install --link --with-font --with-im --with-tmux-plugins --dry-run >/dev/null
+ok "통합 setup macOS dry-run 위임 통과"
+
 ./scripts/setup-macos.sh --install --link --with-font --with-im --with-tmux-plugins --dry-run >/dev/null
 ok "macOS dry-run 통과"
 
+info "sync dry-run 검사"
+tmp_sync_dir="$(mktemp -d)"
+git -C "$tmp_sync_dir" init -q
+git -C "$tmp_sync_dir" config user.email setup-test@example.invalid
+git -C "$tmp_sync_dir" config user.name "Setup Test"
+printf 'test\n' >"$tmp_sync_dir/file"
+git -C "$tmp_sync_dir" add file
+git -C "$tmp_sync_dir" commit -q -m init
+git -C "$tmp_sync_dir" clone -q --bare . "$tmp_sync_dir/origin.git"
+git -C "$tmp_sync_dir" remote add origin "$tmp_sync_dir/origin.git"
+git -C "$tmp_sync_dir" fetch -q origin
+sync_branch="$(git -C "$tmp_sync_dir" branch --show-current)"
+git -C "$tmp_sync_dir" branch --set-upstream-to="origin/$sync_branch" >/dev/null
+REPO_DIR="$REPO_DIR" SCRIPT_DIR="$tmp_sync_dir" bash -c '
+  set -euo pipefail
+  source "$REPO_DIR/scripts/lib/setup-common.sh"
+  parse_setup_flags --sync --dry-run
+  sync_repository >/dev/null
+'
+printf 'dirty\n' >>"$tmp_sync_dir/file"
+REPO_DIR="$REPO_DIR" SCRIPT_DIR="$tmp_sync_dir" bash -c '
+  set -euo pipefail
+  source "$REPO_DIR/scripts/lib/setup-common.sh"
+  parse_setup_flags --sync --dry-run
+  sync_repository >/dev/null
+'
+ok "sync dry-run 검사 통과"
+
 info "symlink helper 단위 테스트"
 tmp_dir="$(mktemp -d)"
-trap 'rm -rf "$tmp_dir"' EXIT
 mkdir -p "$tmp_dir/src" "$tmp_dir/parent"
 ln -s "$tmp_dir/src" "$tmp_dir/parent/ok-link"
 

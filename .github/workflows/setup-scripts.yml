@@ -21,10 +21,10 @@ jobs:
           go install mvdan.cc/sh/v3/cmd/shfmt@latest
 
       - name: Bash syntax
-        run: bash -n scripts/setup-macos.sh scripts/setup-wsl.sh scripts/lib/setup-common.sh scripts/lib/setup-versions.sh scripts/test-setup.sh
+        run: bash -n scripts/setup.sh scripts/setup-macos.sh scripts/setup-wsl.sh scripts/lib/setup-common.sh scripts/lib/setup-versions.sh scripts/test-setup.sh
 
       - name: ShellCheck
-        run: shellcheck scripts/setup-macos.sh scripts/setup-wsl.sh scripts/lib/setup-common.sh scripts/lib/setup-versions.sh scripts/test-setup.sh
+        run: shellcheck scripts/setup.sh scripts/setup-macos.sh scripts/setup-wsl.sh scripts/lib/setup-common.sh scripts/lib/setup-versions.sh scripts/test-setup.sh
 
       - name: shfmt
-        run: shfmt -d -i 2 -ci scripts/setup-macos.sh scripts/setup-wsl.sh scripts/lib/setup-common.sh scripts/lib/setup-versions.sh scripts/test-setup.sh
+        run: shfmt -d -i 2 -ci scripts/setup.sh scripts/setup-macos.sh scripts/setup-wsl.sh scripts/lib/setup-common.sh scripts/lib/setup-versions.sh scripts/test-setup.sh

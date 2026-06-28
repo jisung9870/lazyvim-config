@@ -13,6 +13,8 @@ source "$SCRIPT_DIR/scripts/lib/setup-common.sh"
 source "$SCRIPT_DIR/scripts/lib/setup-versions.sh"
 parse_setup_flags "$@"
 print_mode_summary
+sync_repository
+sync_plugins
 
 GOLANG_VERSION="$(read_tool_version golang)"
 NODEJS_VERSION="$(read_tool_version nodejs)"
@@ -159,6 +161,11 @@ ensure_tpm() {
     return 0
   fi
 
+  if [ "$INSTALL" != true ]; then
+    check_tpm_status
+    return 0
+  fi
+
   if [ -d "$tpm_dir" ]; then
     ok "TPM 이미 설치됨"
   else
@@ -264,7 +271,7 @@ fi
 
 echo ""
 echo -e "${GREEN}========================================${NC}"
-if [ "$INSTALL" = true ] || [ "$LINK" = true ] || [ "$WITH_FONT" = true ] || [ "$WITH_IM" = true ] || [ "$WITH_TMUX_PLUGINS" = true ]; then
+if [ "$INSTALL" = true ] || [ "$LINK" = true ] || [ "$SYNC" = true ] || [ "$SYNC_PLUGINS" = true ] || [ "$WITH_FONT" = true ] || [ "$WITH_IM" = true ] || [ "$WITH_TMUX_PLUGINS" = true ]; then
   echo -e "${GREEN}  설정 완료${NC}"
 else
   echo -e "${GREEN}  점검 완료${NC}"
@@ -278,9 +285,9 @@ echo "asdf 현재 상태:"
 asdf current 2>/dev/null || true
 echo ""
 echo "다음 단계:"
-echo "  1. 변경 전 확인: ./scripts/setup-macos.sh --install --link --with-font --with-im --with-tmux-plugins --dry-run"
+echo "  1. 변경 전 확인: ./scripts/setup.sh --install --link --with-font --with-im --with-tmux-plugins --dry-run"
 echo "  2. 필요한 변경은 --install --link --with-font --with-im --with-tmux-plugins 중 선택해 재실행"
 echo "  3. nvim 실행 -> 플러그인 자동 설치 대기"
 echo "  4. :checkhealth 로 상태 확인"
-echo "  5. :Lazy restore 로 플러그인 버전 동기화"
+echo "  5. ./scripts/setup.sh --sync --sync-plugins 로 repo/plugin 버전 동기화"
 echo ""

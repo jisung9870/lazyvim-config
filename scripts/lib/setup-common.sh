@@ -11,6 +11,8 @@ LINK=false
 WITH_FONT=false
 WITH_IM=false
 WITH_TMUX_PLUGINS=false
+SYNC=false
+SYNC_PLUGINS=false
 YES=false
 DRY_RUN=false
 
@@ -24,15 +26,17 @@ error() {
 
 usage() {
   cat <<USAGE
-Usage: $0 [--install] [--link] [--with-font] [--with-im] [--with-tmux-plugins] [--dry-run] [--yes]
+Usage: $0 [--install] [--link] [--sync] [--sync-plugins] [--with-font] [--with-im] [--with-tmux-plugins] [--dry-run] [--yes]
 
 Default mode only checks current machine state. Use flags to make changes.
 
   --install            Install missing packages, asdf tools, and CLI dependencies.
   --link               Create Neovim/tmux symlinks and local.lua template.
+  --sync               Fetch and fast-forward this git repository.
+  --sync-plugins       Restore Neovim Lazy plugin versions from the lockfile.
   --with-font          Install JetBrainsMono Nerd Font.
   --with-im            Install/check input-method helper where supported.
-  --with-tmux-plugins  Clone TPM and install tmux plugins. Requires --install.
+  --with-tmux-plugins  Manage tmux plugins. Requires --install or --sync-plugins.
   --dry-run            Print changes that would run without changing files/system.
   --yes                Allow backup/move of existing files during --link.
   -h, --help           Show this help.
@@ -47,6 +51,12 @@ parse_setup_flags() {
         ;;
       --link)
         LINK=true
+        ;;
+      --sync)
+        SYNC=true
+        ;;
+      --sync-plugins)
+        SYNC_PLUGINS=true
         ;;
       --with-font)
         WITH_FONT=true
@@ -74,8 +84,8 @@ parse_setup_flags() {
     shift
   done
 
-  if [ "$WITH_TMUX_PLUGINS" = true ] && [ "$INSTALL" != true ]; then
-    error "--with-tmux-plugins는 --install과 함께 사용하세요."
+  if [ "$WITH_TMUX_PLUGINS" = true ] && [ "$INSTALL" != true ] && [ "$SYNC_PLUGINS" != true ]; then
+    error "--with-tmux-plugins는 --install 또는 --sync-plugins와 함께 사용하세요."
   fi
 }
 
@@ -374,9 +384,82 @@ check_tpm_status() {
   fi
 }
 
+ensure_git_repo_for_sync() {
+  git -C "$SCRIPT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1 ||
+    error "--sync는 git repository 안에서만 사용할 수 있습니다: $SCRIPT_DIR"
+}
+
+git_worktree_dirty() {
+  [ -n "$(git -C "$SCRIPT_DIR" status --porcelain)" ]
+}
+
+git_upstream_ref() {
+  git -C "$SCRIPT_DIR" rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null
+}
+
+sync_repository() {
+  local upstream
+
+  [ "$SYNC" = true ] || return 0
+
+  ensure_git_repo_for_sync
+  info "git repository 동기화 확인: $SCRIPT_DIR"
+
+  if git_worktree_dirty; then
+    warn "작업 트리에 커밋되지 않은 변경이 있습니다."
+    git -C "$SCRIPT_DIR" status --short
+    if [ "$DRY_RUN" = true ]; then
+      warn "DRY-RUN: dirty worktree이므로 fetch/pull 예정 명령만 표시하지 않습니다."
+      return 0
+    fi
+    error "변경사항을 commit 또는 stash 한 뒤 --sync를 다시 실행하세요."
+  fi
+
+  upstream="$(git_upstream_ref)" ||
+    error "현재 branch에 upstream이 없습니다. 예: git branch --set-upstream-to=origin/main"
+
+  ok "upstream 확인됨: $upstream"
+  run_step "git remote 정리 fetch" git -C "$SCRIPT_DIR" fetch --prune
+  run_step "git fast-forward pull" git -C "$SCRIPT_DIR" pull --ff-only
+}
+
+sync_neovim_plugins() {
+  [ "$SYNC_PLUGINS" = true ] || return 0
+
+  if ! has_cmd nvim && [ "$DRY_RUN" != true ]; then
+    error "nvim을 찾을 수 없습니다. 먼저 --install을 실행한 뒤 --sync-plugins를 사용하세요."
+  fi
+
+  run_step "Neovim Lazy plugin restore" nvim --headless "+Lazy! restore" "+qa"
+}
+
+sync_tmux_plugins() {
+  local tpm_dir="$HOME/.tmux/plugins/tpm"
+
+  [ "$SYNC_PLUGINS" = true ] || return 0
+  [ "$WITH_TMUX_PLUGINS" = true ] || return 0
+
+  if [ ! -d "$tpm_dir" ]; then
+    warn "TPM 없음: tmux 플러그인 동기화를 건너뜁니다."
+    warn "TPM 설치가 필요하면 --install --with-tmux-plugins를 먼저 실행하세요."
+    return 0
+  fi
+
+  if [ "$DRY_RUN" = true ] || [ -x "$tpm_dir/bin/install_plugins" ]; then
+    run_step "tmux 플러그인 설치/업데이트 (TPM)" "$tpm_dir/bin/install_plugins"
+  else
+    warn "TPM 실행 파일을 찾을 수 없습니다: $tpm_dir/bin/install_plugins"
+  fi
+}
+
+sync_plugins() {
+  sync_neovim_plugins
+  sync_tmux_plugins
+}
+
 print_mode_summary() {
-  info "모드: install=$INSTALL link=$LINK with-font=$WITH_FONT with-im=$WITH_IM with-tmux-plugins=$WITH_TMUX_PLUGINS dry-run=$DRY_RUN yes=$YES"
-  if [ "$INSTALL" != true ] && [ "$LINK" != true ] && [ "$WITH_FONT" != true ] && [ "$WITH_IM" != true ] && [ "$WITH_TMUX_PLUGINS" != true ]; then
+  info "모드: install=$INSTALL link=$LINK sync=$SYNC sync-plugins=$SYNC_PLUGINS with-font=$WITH_FONT with-im=$WITH_IM with-tmux-plugins=$WITH_TMUX_PLUGINS dry-run=$DRY_RUN yes=$YES"
+  if [ "$INSTALL" != true ] && [ "$LINK" != true ] && [ "$SYNC" != true ] && [ "$SYNC_PLUGINS" != true ] && [ "$WITH_FONT" != true ] && [ "$WITH_IM" != true ] && [ "$WITH_TMUX_PLUGINS" != true ]; then
     info "기본 점검 모드입니다. 설치/링크/파일 생성은 수행하지 않습니다."
   fi
 }

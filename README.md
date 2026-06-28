@@ -28,11 +28,13 @@ lua/
 
 ```bash
 # MacBook
-cd ~/.config/nvim && git pull && nvim  # :Lazy restore
+cd ~/.config/nvim && ./scripts/setup.sh --sync --sync-plugins
 
 # WSL
-cd ~/.config/nvim && git pull && nvim  # :Lazy restore
+cd ~/.config/nvim && ./scripts/setup.sh --type wsl --sync --sync-plugins
 ```
+
+`--sync`는 dirty worktree에서 중단하고 `git pull --ff-only`만 사용합니다. `--sync-plugins`는 `:Lazy restore`를 headless로 실행합니다.
 
 ### 머신별 로컬 설정
 
@@ -59,31 +61,37 @@ vim.g.clipboard = {
 기본 실행은 점검만 수행합니다. 실제 설치, symlink 생성, 폰트 설치, TPM 플러그인 설치는 플래그를 명시해야 합니다.
 
 ```bash
-# macOS: 기본은 상태 점검만
-./scripts/setup-macos.sh
+# 자동 감지: macOS는 macOS 스크립트, WSL은 WSL 스크립트로 위임
+./scripts/setup.sh
 
-# WSL/Linux: 기본은 상태 점검만
-./scripts/setup-wsl.sh
+# 자동 감지가 어려운 환경에서는 명시
+./scripts/setup.sh --type macos
+./scripts/setup.sh --type wsl
 
 # 변경 전 실행 예정 작업 확인
-./scripts/setup-macos.sh --install --link --with-font --with-im --with-tmux-plugins --dry-run
-./scripts/setup-wsl.sh --install --link --with-font --with-im --with-tmux-plugins --dry-run
+./scripts/setup.sh --install --link --with-font --with-im --with-tmux-plugins --dry-run
 
 # 설치까지 수행
-./scripts/setup-macos.sh --install
-./scripts/setup-wsl.sh --install
+./scripts/setup.sh --install
 
 # 설정 symlink와 lua/config/local.lua 템플릿 생성
-./scripts/setup-macos.sh --link
-./scripts/setup-wsl.sh --link
+./scripts/setup.sh --link
 
 # tmux TPM clone/plugin 설치는 명시 플래그 필요
-./scripts/setup-macos.sh --install --with-tmux-plugins
-./scripts/setup-wsl.sh --install --with-tmux-plugins
+./scripts/setup.sh --install --with-tmux-plugins
+
+# repo와 Lazy plugin lockfile 동기화
+./scripts/setup.sh --sync --sync-plugins
+
+# 기존 TPM이 있을 때 tmux plugin도 동기화
+./scripts/setup.sh --sync-plugins --with-tmux-plugins
 
 # 전체 bootstrap 예시
-./scripts/setup-macos.sh --install --link --with-font --with-im --with-tmux-plugins --yes
-./scripts/setup-wsl.sh --install --link --with-font --with-im --with-tmux-plugins --yes
+./scripts/setup.sh --install --link --with-font --with-im --with-tmux-plugins --yes
+
+# 고급 사용: 플랫폼별 스크립트를 직접 실행할 수도 있음
+./scripts/setup-macos.sh --install --dry-run
+./scripts/setup-wsl.sh --install --dry-run
 ```
 
 기존 `~/.config/nvim` 또는 `~/.tmux.conf`가 일반 파일/디렉터리이면 `--link --yes`일 때만 백업 후 교체합니다.
