@@ -43,8 +43,25 @@ vim.filetype.add({
 })
 
 -- ========================================
--- Ansible 파일 자동 감지
+-- YAML 계열 파일 자동 감지
 -- ========================================
+
+vim.filetype.add({
+  pattern = {
+    [".*/%.github/workflows/.*%.yml"] = "yaml.ghaction",
+    [".*/%.github/workflows/.*%.yaml"] = "yaml.ghaction",
+  },
+})
+
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = {
+    "*/.github/workflows/*.yml",
+    "*/.github/workflows/*.yaml",
+  },
+  callback = function()
+    vim.bo.filetype = "yaml.ghaction"
+  end,
+})
 
 -- 경로 기반 감지
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
@@ -65,6 +82,10 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
   pattern = { "*.yml", "*.yaml" },
   callback = function()
+    if vim.bo.filetype == "yaml.ghaction" then
+      return
+    end
+
     local lines = vim.api.nvim_buf_get_lines(0, 0, 50, false)
     local content = table.concat(lines, "\n")
     if content:match("hosts:") or content:match("tasks:") or content:match("ansible_") or content:match("become:") then
@@ -96,12 +117,21 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 -- 커서가 멈추면 자동으로 diagnostic float 띄우기
 vim.api.nvim_create_autocmd("CursorHold", {
   callback = function()
+    local diagnostics = vim.diagnostic.get(0, {
+      lnum = vim.api.nvim_win_get_cursor(0)[1] - 1,
+      severity = { min = vim.diagnostic.severity.WARN },
+    })
+    if vim.tbl_isempty(diagnostics) then
+      return
+    end
+
     vim.diagnostic.open_float(nil, {
       focusable = false,
       close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
       border = "rounded",
       source = "always", -- 어떤 LSP에서 온 메시지인지 표시
       scope = "cursor", -- 커서 위치의 진단만
+      severity = { min = vim.diagnostic.severity.WARN },
     })
   end,
 })

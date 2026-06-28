@@ -19,7 +19,7 @@
 return {
   {
     "someone-stole-my-name/yaml-companion.nvim",
-    ft = { "yaml", "yaml.ansible" },
+    ft = { "yaml", "yaml.ansible", "yaml.ghaction" },
     dependencies = {
       "neovim/nvim-lspconfig",
       "nvim-telescope/telescope.nvim",
@@ -66,16 +66,13 @@ return {
             name = "Docker Compose",
             uri = "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json",
           },
-          {
-            name = "ArgoCD Application",
-            uri = "https://raw.githubusercontent.com/argoproj/argo-cd/master/pkg/apis/application/v1alpha1/types.go",
-          },
         },
 
         -- ==============================
         -- yamlls 설정 (extras.lang.yaml과 병합됨)
         -- ==============================
         lspconfig = {
+          filetypes = { "yaml", "yaml.ansible", "yaml.ghaction" },
           settings = {
             yaml = {
               validate = true,
@@ -141,7 +138,8 @@ return {
           return ""
         end,
         cond = function()
-          return vim.bo.filetype == "yaml" and package.loaded["yaml-companion"]
+          return vim.tbl_contains({ "yaml", "yaml.ansible", "yaml.ghaction" }, vim.bo.filetype)
+            and package.loaded["yaml-companion"]
         end,
         color = { fg = "#89b4fa" },
       })
