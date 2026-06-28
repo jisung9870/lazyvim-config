@@ -115,7 +115,7 @@ return {
           require("telescope").extensions.yaml_schema.yaml_schema()
         end,
         desc = "YAML: Select schema",
-        ft = "yaml",
+        ft = { "yaml", "yaml.ansible", "yaml.ghaction" },
       },
     },
   },
