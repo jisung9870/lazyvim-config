@@ -163,6 +163,38 @@ backup_file_or_dir() {
   run_step "백업 생성: $target -> $backup" mv "$target" "$backup"
 }
 
+canonical_existing_path() {
+  local path=$1
+  local dir
+  local base
+
+  if [ -d "$path" ]; then
+    (cd "$path" && pwd -P)
+    return 0
+  fi
+
+  if [ -e "$path" ]; then
+    dir=$(dirname "$path")
+    base=$(basename "$path")
+    (cd "$dir" && printf '%s/%s\n' "$(pwd -P)" "$base")
+    return 0
+  fi
+
+  return 1
+}
+
+same_existing_path() {
+  local left=$1
+  local right=$2
+  local left_canonical
+  local right_canonical
+
+  [ -e "$left" ] && [ -e "$right" ] || return 1
+  left_canonical=$(canonical_existing_path "$left") || return 1
+  right_canonical=$(canonical_existing_path "$right") || return 1
+  [ "$left_canonical" = "$right_canonical" ]
+}
+
 ensure_symlink() {
   local source=$1
   local dest=$2
@@ -185,6 +217,10 @@ ensure_symlink() {
     fi
     run_step "기존 심볼릭 링크 제거: $dest" rm "$dest"
   elif [ -e "$dest" ]; then
+    if same_existing_path "$source" "$dest"; then
+      ok "$label 경로가 이미 실제 대상과 동일함: $dest"
+      return 0
+    fi
     warn "기존 $label 발견: $dest"
     backup_file_or_dir "$dest"
     if [ "$DRY_RUN" = true ]; then
@@ -211,6 +247,11 @@ check_symlink_status() {
     warn "$label 심볼릭 링크 대상 다름: $dest -> $current_target (기대: $source)"
     warn "--link --yes 사용 시 교체합니다."
     return 1
+  fi
+
+  if same_existing_path "$source" "$dest"; then
+    ok "$label 경로가 이미 실제 대상과 동일함: $dest"
+    return 0
   fi
 
   if [ -e "$dest" ]; then
@@ -336,11 +377,24 @@ check_asdf_tool() {
     return 1
   fi
 
-  if asdf list "$plugin" 2>/dev/null | grep -Fq "$version"; then
+  if asdf_tool_installed "$plugin" "$version"; then
     ok "asdf $plugin $version 설치됨"
   else
     warn "asdf $plugin $version 없음"
   fi
+}
+
+asdf_plugin_installed() {
+  local plugin=$1
+
+  asdf plugin list 2>/dev/null | awk -v plugin="$plugin" '$1 == plugin { found = 1 } END { exit found ? 0 : 1 }'
+}
+
+asdf_tool_installed() {
+  local plugin=$1
+  local version=$2
+
+  asdf where "$plugin" "$version" >/dev/null 2>&1
 }
 
 install_asdf_tool() {
@@ -359,19 +413,20 @@ install_asdf_tool() {
     return 0
   fi
 
-  if ! asdf plugin list 2>/dev/null | grep -qx "$plugin"; then
+  if ! asdf_plugin_installed "$plugin"; then
     run_step "asdf plugin 추가: $plugin" asdf plugin add "$plugin"
   else
     ok "asdf plugin 이미 있음: $plugin"
   fi
 
-  if asdf list "$plugin" 2>/dev/null | grep -Fq "$version"; then
+  if asdf_tool_installed "$plugin" "$version"; then
     ok "$plugin $version 이미 설치됨"
   else
     run_step "$plugin $version 설치" asdf install "$plugin" "$version"
   fi
 
   run_step "$plugin $version -> ~/.tool-versions 설정" asdf set --home "$plugin" "$version"
+  run_step "asdf $plugin reshim" asdf reshim "$plugin"
 }
 
 check_tpm_status() {

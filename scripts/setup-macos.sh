@@ -148,7 +148,7 @@ install_devops_tools() {
   if has_cmd ansible-lint; then
     ok "ansible-lint 이미 설치됨"
   else
-    run_step "ansible-lint 설치" pip install ansible-lint
+    run_step "ansible-lint 설치" asdf exec python -m pip install ansible-lint
     run_step "asdf python reshim" asdf reshim python
   fi
 }
