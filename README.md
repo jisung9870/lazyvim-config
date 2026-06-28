@@ -56,13 +56,62 @@ vim.g.clipboard = {
 
 ## 초기 설정
 
+기본 실행은 점검만 수행합니다. 실제 설치, symlink 생성, 폰트 설치, TPM 플러그인 설치는 플래그를 명시해야 합니다.
+
 ```bash
-# macOS
+# macOS: 기본은 상태 점검만
 ./scripts/setup-macos.sh
 
-# WSL/Linux
+# WSL/Linux: 기본은 상태 점검만
 ./scripts/setup-wsl.sh
+
+# 변경 전 실행 예정 작업 확인
+./scripts/setup-macos.sh --install --link --with-font --with-im --with-tmux-plugins --dry-run
+./scripts/setup-wsl.sh --install --link --with-font --with-im --with-tmux-plugins --dry-run
+
+# 설치까지 수행
+./scripts/setup-macos.sh --install
+./scripts/setup-wsl.sh --install
+
+# 설정 symlink와 lua/config/local.lua 템플릿 생성
+./scripts/setup-macos.sh --link
+./scripts/setup-wsl.sh --link
+
+# tmux TPM clone/plugin 설치는 명시 플래그 필요
+./scripts/setup-macos.sh --install --with-tmux-plugins
+./scripts/setup-wsl.sh --install --with-tmux-plugins
+
+# 전체 bootstrap 예시
+./scripts/setup-macos.sh --install --link --with-font --with-im --with-tmux-plugins --yes
+./scripts/setup-wsl.sh --install --link --with-font --with-im --with-tmux-plugins --yes
 ```
+
+기존 `~/.config/nvim` 또는 `~/.tmux.conf`가 일반 파일/디렉터리이면 `--link --yes`일 때만 백업 후 교체합니다.
+
+### asdf와 버전
+
+Go/Node.js/Python은 asdf로 관리하며, repo 루트의 `.tool-versions`를 기준으로 설치합니다.
+
+```bash
+golang 1.23.5
+nodejs 24.15.0
+python 3.13.1
+```
+
+setup 스크립트는 asdf 자체를 자동 설치하지 않습니다.
+
+- macOS: `brew install asdf` 후 shell rc에 asdf 초기화를 추가하고 새 터미널에서 실행
+- WSL/Linux: asdf 공식 가이드에 따라 설치 후 shell rc를 갱신하고 새 터미널에서 실행
+
+Neovim AppImage 버전은 `scripts/lib/setup-versions.sh`의 `NVIM_VERSION`에서 관리합니다.
+
+### 검증
+
+```bash
+./scripts/test-setup.sh
+```
+
+`scripts/test-setup.sh`는 bash 문법, ShellCheck, shfmt, help 출력, dry-run, symlink helper 단위 테스트, `nvim --headless '+qa'`를 확인합니다. 로컬에 `shellcheck`, `shfmt`, `nvim`이 없으면 해당 항목은 경고 후 건너뜁니다.
 
 ## Extras (lazyvim.json)
 
