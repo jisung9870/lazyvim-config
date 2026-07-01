@@ -151,4 +151,77 @@ return {
       { "<leader>cs", "<cmd>AerialToggle<cr>", desc = "Aerial (Symbols)" },
     },
   },
+
+  -- ==============================
+  -- 4. Snacks Explorer
+  -- ==============================
+  {
+    "folke/snacks.nvim",
+    opts = function(_, opts)
+      local uv = vim.uv or vim.loop
+
+      local function copy_target(path)
+        local dir = vim.fs.dirname(path)
+        local name = vim.fn.fnamemodify(path, ":t")
+        local is_dir = Snacks.util.path_type(path) == "directory"
+        local stem = name
+        local suffix = ""
+
+        if not is_dir then
+          local ext = vim.fn.fnamemodify(name, ":e")
+          if ext ~= "" then
+            suffix = "." .. ext
+            stem = name:sub(1, #name - #suffix)
+          end
+        end
+
+        local target = dir .. "/" .. stem .. ".copy" .. suffix
+        local index = 2
+        while uv.fs_stat(target) do
+          target = dir .. "/" .. stem .. ".copy" .. index .. suffix
+          index = index + 1
+        end
+        return target
+      end
+
+      opts.picker = opts.picker or {}
+      opts.picker.sources = opts.picker.sources or {}
+      opts.picker.sources.explorer = opts.picker.sources.explorer or {}
+
+      local explorer = opts.picker.sources.explorer
+      explorer.actions = explorer.actions or {}
+      explorer.actions.explorer_duplicate = function(picker)
+        local paths = vim.tbl_map(Snacks.picker.util.path, picker:selected({ fallback = true }))
+        paths = vim.tbl_filter(function(path)
+          return path ~= nil
+        end, paths)
+        if #paths == 0 then
+          return
+        end
+
+        local Tree = require("snacks.explorer.tree")
+        local Actions = require("snacks.explorer.actions")
+        local target
+        for _, from in ipairs(paths) do
+          local to = copy_target(from)
+          Snacks.picker.util.copy_path(from, to)
+          Tree:refresh(vim.fs.dirname(from))
+          target = to
+        end
+        picker.list:set_selected()
+        Actions.update(picker, { target = target })
+        Snacks.notify.info("Duplicated " .. #paths .. " file" .. (#paths > 1 and "s" or ""))
+      end
+
+      explorer.win = explorer.win or {}
+      explorer.win.list = explorer.win.list or {}
+      explorer.win.list.keys = explorer.win.list.keys or {}
+      explorer.win.list.keys["C"] = "explorer_duplicate"
+      explorer.win.list.keys["M"] = "toggle_maximize"
+      explorer.win.list.keys["-"] = "edit_split"
+      explorer.win.list.keys["|"] = "edit_vsplit"
+
+      return opts
+    end,
+  },
 }
