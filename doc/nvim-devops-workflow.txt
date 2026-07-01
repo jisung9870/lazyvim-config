@@ -1,0 +1,139 @@
+*nvim-devops-workflow*        DevOps workflow for this LazyVim config
+
+DevOps Workflow                                *nvim-devops-workflow-title*
+
+이 문서는 YAML, Kubernetes, GitHub Actions, Ansible, Terraform, Dockerfile,
+Grafana Alloy 같은 DevOps 파일을 다룰 때의 기본 흐름을 정리한다.
+
+==============================================================================
+기본 순서                                           *nvim-devops-workflow-order*
+
+DevOps 파일을 열면 아래 순서로 확인한다.
+
+1. filetype이 맞는지 본다.
+>
+   :set ft?
+<
+2. YAML이면 schema가 맞는지 본다.
+>
+   <leader>ys
+<
+3. diagnostics를 확인한다.
+>
+   <leader>xx
+   <leader>xX
+   ]d / [d
+<
+4. 필요하면 수동 포맷한다.
+>
+   <leader>cf
+<
+5. 저장 후 lint 결과를 다시 본다.
+
+==============================================================================
+YAML과 Kubernetes                                  *nvim-devops-workflow-yaml*
+
+YAML schema 선택:
+>
+  <leader>ys
+<
+
+자동 schema 후보:
+  - Kubernetes strict schema
+  - Kustomization
+  - Helm `Chart.yaml`
+  - GitHub workflow/action
+  - Docker Compose
+
+주의:
+  - YAML은 prettier가 구조를 바꿀 수 있으므로 이상하면 diff를 확인한다.
+  - 큰 파일이나 민감한 manifest는 저장 전 `git diff` 또는 Diffview로 본다.
+  - Kubernetes manifest가 이상하게 진단되면 schema를 수동으로 다시 고른다.
+
+==============================================================================
+Ansible                                             *nvim-devops-workflow-ansible*
+
+자동 감지:
+  - `playbooks/*.yml`, `playbooks/*.yaml`
+  - 내용에 `hosts:`, `tasks:`, `ansible_`, `become:` 등이 있는 YAML
+
+설정:
+  - `ansiblels`
+  - FQCN 사용
+  - `ansible-lint` validation
+  - filetype: `yaml.ansible`
+
+문제 확인:
+>
+  :set ft?
+  <leader>xx
+  :LspInfo
+<
+
+==============================================================================
+Terraform                                            *nvim-devops-workflow-tf*
+
+포맷:
+  - `terraform`, `tf`, `terraform-vars`는 `terraform_fmt`를 사용한다.
+
+Lint:
+  - `terraform`, `tf`, `terraform-vars`는 `tflint`를 사용한다.
+
+문제 확인:
+>
+  <leader>cf
+  <leader>xx
+  :Mason
+<
+
+==============================================================================
+GitHub Actions와 Docker                              *nvim-devops-workflow-ci*
+
+GitHub Actions:
+  - `.github/workflows/*.yml`
+  - `.github/workflows/*.yaml`
+  - filetype: `yaml.ghaction`
+  - linter: `actionlint`
+
+Dockerfile:
+  - treesitter dockerfile 지원
+  - 필요 도구: `hadolint`
+
+문제 확인:
+>
+  :set ft?
+  <leader>xX
+  :Mason
+<
+
+==============================================================================
+Grafana Alloy와 HCL                                  *nvim-devops-workflow-alloy*
+
+Alloy:
+  - `.alloy` filetype 감지는 autocmd에서 처리한다.
+  - `alloy` CLI가 있으면 conform formatter가 동작한다.
+  - formatter는 `alloy fmt - | expand -t 2`를 사용한다.
+
+문제 확인:
+>
+  :set ft?
+  :ConformInfo
+  <leader>cf
+<
+
+==============================================================================
+필요 도구                                            *nvim-devops-workflow-tools*
+
+자주 필요한 외부 도구:
+  - `yamllint`
+  - `actionlint`
+  - `tflint`
+  - `hadolint`
+  - `prettier`
+  - `terraform`
+  - `ansible-lint`
+  - `alloy`
+
+설치 상태는 `:Mason`, `:checkhealth`, 각 CLI의 `--version`으로 확인한다.
+
+vim:tw=78:ts=8:ft=help:norl:

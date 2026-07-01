@@ -1,0 +1,93 @@
+*nvim-terminal-tmux*        Terminal and tmux workflow
+
+Terminal And Tmux Workflow                         *nvim-terminal-tmux-title*
+
+이 문서는 ToggleTerm과 tmux navigator를 함께 쓰는 흐름을 정리한다.
+
+==============================================================================
+터미널 열기                                          *nvim-terminal-tmux-open*
+
+기본 floating terminal toggle:
+>
+  <C-\>
+<
+
+방향별 terminal:
+>
+  <leader>tf
+  <leader>th
+  <leader>tv
+<
+
+선택 기준:
+  - 짧은 명령 실행: floating terminal
+  - 로그를 계속 보기: horizontal terminal
+  - 편집 화면 옆에 shell 유지: vertical terminal
+
+==============================================================================
+Terminal mode                                      *nvim-terminal-tmux-mode*
+
+terminal mode에서 빠져나오기:
+>
+  <Esc>
+<
+
+참고:
+  - ToggleTerm은 terminal을 insert 상태로 시작한다.
+  - normal mode로 나온 뒤에는 일반 buffer처럼 검색과 복사가 가능하다.
+  - 다시 입력하려면 `i`를 누른다.
+
+==============================================================================
+tmux 이동                                           *nvim-terminal-tmux-nav*
+
+Neovim window와 tmux pane 이동:
+>
+  <C-h>
+  <C-j>
+  <C-k>
+  <C-l>
+<
+
+mental model:
+  - Neovim split 안에서도 같은 키를 쓴다.
+  - tmux pane 밖으로 나갈 때도 같은 키를 쓴다.
+  - terminal mode에서도 tmux navigator가 이동을 담당한다.
+
+==============================================================================
+창 관리                                             *nvim-terminal-tmux-window*
+
+Neovim split:
+>
+  <leader>-
+  <leader>|
+  <leader>wd
+<
+
+창 크기 조절:
+>
+  <C-Up>
+  <C-Down>
+  <C-Left>
+  <C-Right>
+<
+
+터미널과 split을 함께 쓸 때:
+  - code + terminal 두 영역이면 vertical terminal이 편하다.
+  - diagnostics나 test output을 볼 때는 horizontal terminal이 편하다.
+  - 임시 명령은 floating terminal로 처리한다.
+
+==============================================================================
+문제 해결                                            *nvim-terminal-tmux-trouble*
+
+터미널이 안 열릴 때:
+>
+  :checkhealth
+  :Lazy
+<
+
+tmux 이동이 안 될 때:
+  - tmux 안에서 실행 중인지 확인한다.
+  - `<C-h/j/k/l>` 키를 terminal emulator가 가로채지 않는지 확인한다.
+  - plugin `vim-tmux-navigator`가 load됐는지 `:Lazy`에서 본다.
+
+vim:tw=78:ts=8:ft=help:norl:

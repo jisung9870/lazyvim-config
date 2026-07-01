@@ -1,0 +1,152 @@
+*nvim-troubleshooting*        Troubleshooting guide for this LazyVim config
+
+Troubleshooting Guide                            *nvim-troubleshooting-title*
+
+이 문서는 Neovim 설정이 예상대로 동작하지 않을 때의 진단 순서를 정리한다.
+
+==============================================================================
+기본 진단 순서                                      *nvim-troubleshooting-order*
+
+1. 현재 증상을 좁힌다.
+  - plugin 문제인가
+  - LSP 문제인가
+  - formatter/linter 문제인가
+  - keymap 문제인가
+  - OS/외부 도구 문제인가
+
+2. 상태를 확인한다.
+>
+  :checkhealth
+  :Lazy
+  :Mason
+  :LspInfo
+<
+
+3. Git diff를 확인한다.
+>
+  git status --short
+  git diff
+<
+
+==============================================================================
+Plugin 문제                                         *nvim-troubleshooting-plugin*
+
+확인:
+>
+  :Lazy
+<
+
+자주 보는 것:
+  - plugin이 installed인지
+  - plugin이 loaded인지
+  - lockfile이 의도치 않게 많이 바뀌었는지
+  - LazyVim extra로 이미 제공되는 기능을 중복 설치했는지
+
+headless 확인:
+>
+  nvim --headless "+qa"
+<
+
+주의:
+  - `Lazy! sync`는 unrelated plugin까지 업데이트할 수 있다.
+  - 끝나면 반드시 `git diff -- lazy-lock.json`을 확인한다.
+
+==============================================================================
+LSP와 diagnostics                                  *nvim-troubleshooting-lsp*
+
+확인:
+>
+  :LspInfo
+  <leader>cl
+  <leader>xx
+  <leader>xX
+  ]d / [d
+<
+
+점검:
+  - filetype이 맞는지 `:set ft?`로 본다.
+  - server가 현재 buffer에 attached 됐는지 본다.
+  - Mason에 필요한 server/tool이 설치됐는지 본다.
+  - project root가 잘못 잡히지 않았는지 본다.
+
+==============================================================================
+Formatter와 linter                                 *nvim-troubleshooting-format*
+
+Formatter 확인:
+>
+  :ConformInfo
+  <leader>cf
+<
+
+Linter 확인:
+>
+  <leader>xX
+  :Mason
+<
+
+자주 필요한 도구:
+  - `stylua`
+  - `shfmt`
+  - `prettier`
+  - `terraform`
+  - `yamllint`
+  - `actionlint`
+  - `tflint`
+  - `ansible-lint`
+  - `alloy`
+
+주의:
+  - Markdown, gitcommit, gitrebase는 저장 시 자동 포맷을 끈다.
+  - 2000줄 초과 파일은 저장 시 자동 포맷을 건너뛴다.
+
+==============================================================================
+Help 문서 문제                                      *nvim-troubleshooting-help*
+
+`:help`로 새 문서가 안 열릴 때:
+>
+  :helptags doc
+  :help nvim-maintenance
+<
+
+headless 확인:
+>
+  nvim --headless "+helptags doc" "+h nvim-maintenance" +qa
+<
+
+점검:
+  - help file에 `*tag*`가 있는지
+  - tag 이름이 너무 일반적이지 않은지
+  - `doc/tags`가 갱신됐는지
+
+==============================================================================
+Keymap 문제                                         *nvim-troubleshooting-keymap*
+
+키가 안 먹을 때:
+>
+  :map <leader>g
+  :verbose nmap <leader>gG
+  :Telescope keymaps
+<
+
+점검:
+  - plugin이 아직 lazy-load되지 않았는지
+  - 같은 키를 다른 plugin이 덮었는지
+  - `desc`가 없어서 which-key에 안 보이는지
+  - mode가 normal/visual/terminal 중 어디인지
+
+==============================================================================
+OS별 문제                                           *nvim-troubleshooting-os*
+
+macOS:
+  - IME 자동 전환은 `macism` 필요
+  - Typora 열기는 `open -a Typora` 사용
+
+WSL:
+  - clipboard는 `lua/config/local.lua`에서 machine-local로 설정한다.
+  - GUI 앱 연동은 환경마다 다를 수 있다.
+
+공통:
+  - machine-specific 설정은 `lua/config/local.lua`에 둔다.
+  - private 값은 commit하지 않는다.
+
+vim:tw=78:ts=8:ft=help:norl:

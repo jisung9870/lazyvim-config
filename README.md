@@ -37,6 +37,24 @@ cd ~/.config/nvim && ./scripts/setup.sh --type wsl --sync --sync-plugins
 
 `--sync`는 dirty worktree에서 중단하고 `git pull --ff-only`만 사용합니다. `--sync-plugins`는 `:Lazy restore`를 headless로 실행합니다.
 
+## 운영 가이드
+
+작업 규칙은 루트 문서와 Neovim help로 나눠 관리합니다.
+
+- `AGENTS.md`: Codex/agent 공통 작업 규칙, 검증, commit 규칙
+- `CLAUDE.md`: Claude Code entrypoint (`AGENTS.md` import)
+- `:help lazyvim-cheatsheet`: 자주 쓰는 키맵 치트시트
+- `:help nvim-maintenance`: help 문서, lockfile, commit, 검증 관리 방식
+- `:help nvim-git-workflow`: GitUI/GitGraph/Diffview/Gitsigns 사용 흐름
+- `:help nvim-devops-workflow`: YAML, Terraform, Ansible 등 DevOps 작업 흐름
+- `:help nvim-troubleshooting`: 문제 해결 순서
+
+help 문서를 추가하거나 수정한 뒤에는 tag를 갱신합니다.
+
+```bash
+nvim --headless "+helptags doc" "+h nvim-maintenance" +qa
+```
+
 ### 머신별 로컬 설정
 
 `lua/config/local.lua`는 `.gitignore`에 추가되어 각 머신 고유 설정 가능:

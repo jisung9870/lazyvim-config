@@ -1,0 +1,95 @@
+*nvim-python-go*        Python and Go workflow for this LazyVim config
+
+Python And Go Workflow                              *nvim-python-go-title*
+
+이 문서는 Python virtualenv와 Go 개발 환경을 다루는 흐름을 정리한다.
+
+==============================================================================
+Python venv                                         *nvim-python-go-python*
+
+기존 virtualenv 선택:
+>
+  <leader>cv
+<
+
+현재 project root에 `.venv` 생성 후 선택:
+>
+  <leader>cV
+<
+
+동작:
+  - `venv-selector.nvim`을 사용한다.
+  - 선택한 venv는 terminal 환경에도 activate를 전송한다.
+  - 열린 terminal buffer가 있으면 `source <venv>/bin/activate`를 보낸다.
+
+문제 확인:
+>
+  :VenvSelect
+  :LspInfo
+  echo $VIRTUAL_ENV
+<
+
+주의:
+  - `.venv` 자체는 repo에 commit하지 않는다.
+  - Python interpreter가 꼬이면 venv를 다시 선택하고 terminal을 새로 연다.
+
+==============================================================================
+Go 기본 흐름                                         *nvim-python-go-go*
+
+설정:
+  - LazyVim `extras.lang.go` 기반
+  - `gopls`
+  - `goimports`
+  - `gofumpt`
+  - `delve`
+  - `neotest-go`
+
+수동 포맷:
+>
+  <leader>cf
+<
+
+parameter 순서 바꾸기:
+>
+  <leader>cx
+  <leader>cX
+<
+
+LSP 확인:
+>
+  :LspInfo
+  <leader>cl
+<
+
+==============================================================================
+Go 테스트와 디버그                                  *nvim-python-go-test*
+
+테스트:
+  - LazyVim test extra와 `neotest-go`를 사용한다.
+  - 테스트 키는 which-key에서 `<leader>t` 또는 test group을 확인한다.
+
+디버그:
+  - `nvim-dap-go`와 `delve`를 사용한다.
+  - DAP 상태는 lualine에 표시될 수 있다.
+
+문제 확인:
+>
+  :Mason
+  :LspInfo
+  :checkhealth
+<
+
+==============================================================================
+언어별 문제 해결                                     *nvim-python-go-trouble*
+
+Python:
+  - venv가 선택됐는지 확인한다.
+  - terminal에 `VIRTUAL_ENV`가 반영됐는지 본다.
+  - LSP가 다른 interpreter를 보고 있으면 venv를 다시 선택한다.
+
+Go:
+  - `go env GOMOD`로 module root를 확인한다.
+  - `gopls`가 붙었는지 `:LspInfo`로 본다.
+  - format이 다르면 `goimports`와 `gofumpt` 설치 상태를 확인한다.
+
+vim:tw=78:ts=8:ft=help:norl:

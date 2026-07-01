@@ -1,0 +1,181 @@
+*nvim-maintenance*        Neovim config maintenance guide
+
+Neovim Config Maintenance                       *nvim-maintenance-title*
+
+이 문서는 이 LazyVim 설정 repo를 유지보수할 때 따를 규칙을 정리한다.
+Codex, Claude Code, 사람이 같은 방식으로 작업하도록 루트 `AGENTS.md`와
+함께 관리한다.
+
+==============================================================================
+문서 위치                                             *nvim-maintenance-docs*
+
+파일                    용도
+------------------------------------------------------------------------------
+README.md               사람용 설치/구조/진입점
+AGENTS.md               Codex와 공통 에이전트 작업 규칙
+CLAUDE.md               Claude Code entrypoint, AGENTS.md import
+doc/lazyvim-cheatsheet.txt  자주 쓰는 키맵 요약
+doc/nvim-maintenance.txt    repo 운영과 문서/commit/검증 규칙
+doc/nvim-git-workflow.txt   Git 도구별 작업 흐름
+doc/nvim-devops-workflow.txt  DevOps 파일 작업 흐름
+doc/nvim-python-go.txt      Python/Go 작업 흐름
+doc/nvim-terminal-tmux.txt  terminal/tmux 작업 흐름
+doc/nvim-troubleshooting.txt  문제 해결 순서
+doc/tags                `:help` tag index, helptags로 생성
+
+원칙:
+  - 사용법과 키맵은 `doc/*.txt`에 남긴다.
+  - 작업 규칙과 검증 절차는 `AGENTS.md`에 남긴다.
+  - README에는 긴 규칙을 복사하지 말고, 어디를 보면 되는지만 안내한다.
+  - 치트시트는 요약, workflow 문서는 사용 순서와 판단 기준을 담는다.
+
+==============================================================================
+Help 문서 관리                                       *nvim-maintenance-help*
+
+새 help 문서를 만들 때:
+
+1. `doc/<name>.txt` 파일을 만든다.
+2. 파일 상단에 고유 tag를 추가한다.
+>
+   *nvim-example*
+<
+3. 섹션별로 필요한 경우 추가 tag를 둔다.
+>
+   설정 관리                                      *nvim-example-config*
+<
+4. helptags를 갱신한다.
+>
+   :helptags doc
+<
+5. 열리는지 확인한다.
+>
+   :help nvim-example
+<
+
+CLI에서 검증:
+>
+  nvim --headless "+helptags doc" "+h nvim-maintenance" +qa
+<
+
+Tag 이름 규칙:
+  - `lazyvim-*`, `nvim-*`처럼 repo 전용 prefix를 쓴다.
+  - `*keys*`, `*git*`, `*config*`처럼 너무 일반적인 이름은 피한다.
+  - tag 이름을 바꾸면 `doc/tags`도 다시 생성한다.
+
+==============================================================================
+키맵 변경                                            *nvim-maintenance-keymap*
+
+키맵을 추가하거나 바꿀 때:
+
+1. 기존 LazyVim 키와 충돌하는지 확인한다.
+2. `desc`를 반드시 넣어 which-key에 표시되게 한다.
+3. 플러그인 전용 키는 해당 `lua/plugins/*.lua`에 둔다.
+4. 일반 편집 키는 `lua/config/keymaps.lua`에 둔다.
+5. 사용자에게 알려야 하는 키는 `doc/lazyvim-cheatsheet.txt`도 갱신한다.
+
+Git 키 기준:
+  - `<leader>gg`: Git UI
+  - `<leader>gG`: commit graph
+  - `<leader>gd`: Diffview open
+  - `<leader>gq`: Diffview close
+
+==============================================================================
+플러그인과 lockfile                                  *nvim-maintenance-plugin*
+
+플러그인 추가 기준:
+
+1. LazyVim extra로 해결 가능한지 먼저 본다.
+2. 이미 있는 plugin 설정을 확장할 수 있으면 그 방식을 우선한다.
+3. 새 plugin은 명확한 반복 사용 가치가 있을 때만 추가한다.
+
+Lockfile 규칙:
+  - `lazy-lock.json`은 의도한 plugin pin만 변경한다.
+  - `Lazy! sync`가 unrelated plugin까지 업데이트하면 되돌린다.
+  - broad upgrade는 별도 요청이 있을 때만 한다.
+
+검증 예:
+>
+  nvim --headless "+Lazy! sync" +qa
+  git diff -- lazy-lock.json
+<
+
+==============================================================================
+커밋 규칙                                            *nvim-maintenance-commit*
+
+Conventional Commits를 사용한다.
+
+예:
+>
+  feat(git): add gitgraph commit view
+  docs(help): add LazyVim cheatsheet
+  docs(agent): add agent workflow guide
+  chore(lock): pin gitgraph.nvim
+  fix(yaml): correct schema selection mapping
+<
+
+분리 기준:
+  - 설정 동작 변경, help 문서, lockfile 정리는 가능하면 분리한다.
+  - unrelated plugin version bump는 기능 커밋에 섞지 않는다.
+  - help 문서를 바꾸면 `doc/tags`도 함께 커밋한다.
+
+커밋 상세 내용:
+  - 사소한 변경이 아니면 subject 한 줄만 남기지 않는다.
+  - body에 무엇을 바꿨는지, 왜 바꿨는지, 어떻게 검증했는지 남긴다.
+  - 키맵, help tag, 사용자 동작 변화, migration note가 있으면 명시한다.
+
+예:
+>
+  docs(agent): add shared maintenance rules
+
+  Document the shared AGENTS.md workflow so Codex and Claude Code follow the
+  same help, lockfile, and commit conventions.
+
+  Verification:
+  - nvim --headless "+helptags doc" "+h nvim-maintenance" +qa
+  - git diff --check
+<
+
+==============================================================================
+검증                                                  *nvim-maintenance-checks*
+
+변경 종류별 권장 검증:
+
+Lua 설정:
+>
+  stylua --check lua/**/*.lua
+  nvim --headless "+qa"
+<
+
+Help 문서:
+>
+  nvim --headless "+helptags doc" "+h lazyvim-cheatsheet" +qa
+  nvim --headless "+h nvim-maintenance" +qa
+<
+
+Setup script:
+>
+  ./scripts/test-setup.sh
+<
+
+공통:
+>
+  git diff --check
+  git status --short
+<
+
+검증을 실행하지 못한 경우에는 이유를 최종 보고에 남긴다.
+
+==============================================================================
+로컬/비밀 정보                                       *nvim-maintenance-local*
+
+Git에 넣지 않는 것:
+  - `lua/config/local.lua`
+  - `CLAUDE.local.md`
+  - API token, private hostname, personal path
+  - OS별 generated cache 또는 plugin runtime data
+
+로컬 설정이 반복적으로 필요하면:
+  - 실제 값은 local file에 둔다.
+  - README나 help에는 sanitized example만 남긴다.
+
+vim:tw=78:ts=8:ft=help:norl:
