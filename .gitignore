@@ -5,6 +5,7 @@
 spell/
 .luarc.json
 lua/config/local.lua
+CLAUDE.local.md
 
 # 플러그인 데이터/캐시
 plugin/
