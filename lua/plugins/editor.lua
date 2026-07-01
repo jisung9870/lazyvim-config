@@ -65,7 +65,7 @@ return {
     keys = {
       -- 플러그인 파일 탐색
       {
-        "<leader>fp",
+        "<leader>fP",
         function()
           require("telescope.builtin").find_files({ cwd = require("lazy.core.config").options.root })
         end,

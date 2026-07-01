@@ -77,6 +77,24 @@ Neovim split:
   - 임시 명령은 floating terminal로 처리한다.
 
 ==============================================================================
+반복 명령                                            *nvim-terminal-tmux-task*
+
+반복해서 실행하는 명령은 terminal에 직접 치기보다 Overseer task로 실행한다.
+>
+  <leader>oo
+  <leader>ow
+  <leader>ot
+<
+
+추천 대상:
+  - `go test`
+  - `terraform validate`
+  - `ansible-lint`
+  - `docker compose` 명령
+
+임시/일회성 명령은 `<C-\>` floating terminal이 더 가볍다.
+
+==============================================================================
 문제 해결                                            *nvim-terminal-tmux-trouble*
 
 터미널이 안 열릴 때:

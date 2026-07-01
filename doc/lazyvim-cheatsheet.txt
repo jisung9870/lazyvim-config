@@ -32,7 +32,8 @@ jk                     Insert 모드 종료
 <leader>fg             Git tracked 파일 찾기
 <leader>fr             최근 파일
 <leader>fb             버퍼 목록
-<leader>fp             Lazy 플러그인 파일 찾기
+<leader>fp             Project 목록
+<leader>fP             Lazy 플러그인 파일 찾기
 <leader>fn             새 파일
 <leader>sg             Grep 검색
 <leader>sw             커서 단어 검색
@@ -178,6 +179,7 @@ UI Toggle                                             *lazyvim-cheatsheet-ui*
 <leader>ud             diagnostics toggle
 <leader>uc             conceal level toggle
 <leader>uT             Treesitter highlight toggle
+<leader>ut             Treesitter context toggle
 <leader>ub             dark/light background toggle
 <leader>uD             dim toggle
 <leader>ua             animation toggle
@@ -195,6 +197,9 @@ UI Toggle                                             *lazyvim-cheatsheet-ui*
 <leader>cV             현재 project에 .venv 생성 후 선택
 <leader>ys             YAML schema 선택
 <leader>tc             CSV view toggle
+<leader>oo             Overseer task 실행
+<leader>ow             Overseer task list
+<leader>ot             Overseer task action
 CSV에서 <Tab>/<S-Tab>  다음/이전 field 끝으로 이동
 CSV에서 H/L            이전/다음 field 시작으로 이동
 CSV에서 J/K            같은 column 유지하며 다음/이전 row

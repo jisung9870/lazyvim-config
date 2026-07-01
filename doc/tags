@@ -45,6 +45,7 @@ nvim-terminal-tmux	nvim-terminal-tmux.txt	/*nvim-terminal-tmux*
 nvim-terminal-tmux-mode	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-mode*
 nvim-terminal-tmux-nav	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-nav*
 nvim-terminal-tmux-open	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-open*
+nvim-terminal-tmux-task	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-task*
 nvim-terminal-tmux-title	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-title*
 nvim-terminal-tmux-trouble	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-trouble*
 nvim-terminal-tmux-window	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-window*
