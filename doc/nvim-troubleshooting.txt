@@ -104,6 +104,7 @@ Help 문서 문제                                      *nvim-troubleshooting-he
 
 `:help`로 새 문서가 안 열릴 때:
 >
+  :HelpDocs
   :helptags doc
   :help nvim-maintenance
 <

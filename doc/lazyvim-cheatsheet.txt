@@ -13,6 +13,8 @@ LazyVim Key Cheat Sheet                       *lazyvim-cheatsheet-title*
 ------------------------------------------------------------------------------
 Space                  leader 키. 다음 키 후보 보기
 <leader>?              현재 버퍼의 키맵 검색
+<leader>h?             로컬 help 문서 목록 열기
+:HelpDocs              로컬 help 문서 목록 열기
 <C-s>                  저장
 j / k                  긴 줄 기준 화면 줄 단위 이동
 jk                     Insert 모드 종료

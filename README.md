@@ -49,6 +49,8 @@ cd ~/.config/nvim && ./scripts/setup.sh --type wsl --sync --sync-plugins
 - `:help nvim-devops-workflow`: YAML, Terraform, Ansible 등 DevOps 작업 흐름
 - `:help nvim-troubleshooting`: 문제 해결 순서
 
+문서 목록은 Neovim 안에서 `:HelpDocs` 또는 `<leader>h?`로 열 수 있습니다.
+
 help 문서를 추가하거나 수정한 뒤에는 tag를 갱신합니다.
 
 ```bash

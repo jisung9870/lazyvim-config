@@ -54,6 +54,44 @@ map("n", "<leader>a", "ggVG", { desc = "Select all" })
 
 map("v", "p", '"_dP', { desc = "Paste without overwriting register" })
 
+-- ========================================
+-- Help 문서 목록
+-- ========================================
+
+local help_docs = {
+  { label = "Keymap cheatsheet", tag = "lazyvim-cheatsheet" },
+  { label = "Maintenance guide", tag = "nvim-maintenance" },
+  { label = "Git workflow", tag = "nvim-git-workflow" },
+  { label = "DevOps workflow", tag = "nvim-devops-workflow" },
+  { label = "Python and Go workflow", tag = "nvim-python-go" },
+  { label = "Terminal and tmux workflow", tag = "nvim-terminal-tmux" },
+  { label = "Troubleshooting", tag = "nvim-troubleshooting" },
+}
+
+local function open_help_docs()
+  local doc_dir = vim.fn.stdpath("config") .. "/doc"
+  if vim.fn.isdirectory(doc_dir) == 1 then
+    vim.cmd("silent! helptags " .. vim.fn.fnameescape(doc_dir))
+  end
+
+  vim.ui.select(help_docs, {
+    prompt = "Open help document",
+    format_item = function(item)
+      return item.label .. " (:" .. "help " .. item.tag .. ")"
+    end,
+  }, function(item)
+    if item then
+      vim.cmd("help " .. item.tag)
+    end
+  end)
+end
+
+vim.api.nvim_create_user_command("HelpDocs", open_help_docs, {
+  desc = "Open local Neovim help document list",
+})
+
+map("n", "<leader>h?", open_help_docs, { desc = "Help docs" })
+
 -- 현재 파일을 Typora로 열기 (md 파일일 때만)
 map("n", "<leader>mt", function()
   local file = vim.fn.expand("%:p")

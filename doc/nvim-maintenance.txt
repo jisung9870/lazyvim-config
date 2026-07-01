@@ -57,6 +57,12 @@ CLI에서 검증:
   nvim --headless "+helptags doc" "+h nvim-maintenance" +qa
 <
 
+문서 목록을 직접 고를 때:
+>
+  :HelpDocs
+  <leader>h?
+<
+
 Tag 이름 규칙:
   - `lazyvim-*`, `nvim-*`처럼 repo 전용 prefix를 쓴다.
   - `*keys*`, `*git*`, `*config*`처럼 너무 일반적인 이름은 피한다.
