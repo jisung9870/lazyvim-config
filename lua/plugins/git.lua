@@ -5,6 +5,45 @@
 
 return {
   -- ==============================
+  -- 0. GitGraph (VSCode Git Graph 스타일 커밋 그래프)
+  -- ==============================
+  -- :lua require("gitgraph").draw({}, { all = true, max_count = 5000 })
+  -- 커밋에서 Enter → 해당 커밋 Diffview
+  -- Visual 선택 후 Enter → 선택 범위 Diffview
+  {
+    "isakbm/gitgraph.nvim",
+    dependencies = { "sindrets/diffview.nvim" },
+    keys = {
+      {
+        "<leader>gG",
+        function()
+          require("gitgraph").draw({}, { all = true, max_count = 5000 })
+        end,
+        desc = "GitGraph: Commit graph",
+      },
+    },
+    opts = {
+      git_cmd = "git",
+      symbols = {
+        merge_commit = "M",
+        commit = "*",
+      },
+      format = {
+        timestamp = "%Y-%m-%d %H:%M",
+        fields = { "hash", "timestamp", "author", "branch_name", "tag" },
+      },
+      hooks = {
+        on_select_commit = function(commit)
+          vim.cmd("DiffviewOpen " .. commit.hash .. "^!")
+        end,
+        on_select_range_commit = function(from, to)
+          vim.cmd("DiffviewOpen " .. from.hash .. "~1.." .. to.hash)
+        end,
+      },
+    },
+  },
+
+  -- ==============================
   -- 1. Diffview (Git diff/log 뷰어)
   -- ==============================
   -- :DiffviewOpen      → 현재 변경사항을 diff 뷰로 열기
