@@ -17,6 +17,7 @@ lua/
 │   ├── editor.lua      # 한/영 전환 (macOS), Telescope
 │   ├── formatting.lua  # conform.nvim 포맷터 설정
 │   ├── git.lua         # Diffview + Gitsigns
+│   ├── gitlab.lua      # gitlab.nvim (사내 GitLab MR 리뷰)
 │   ├── kubectl.lua     # kubectl.nvim (클러스터 뷰/로그/exec)
 │   ├── octo.lua        # Octo 키맵 조정 (extras.util.octo)
 │   ├── lang-devops.lua # Nginx, Alloy, Ansible LSP
@@ -130,7 +131,7 @@ vim.g.clipboard = {
 Go/Node.js/Python은 asdf로 관리하며, repo 루트의 `.tool-versions`를 기준으로 설치합니다.
 
 ```bash
-golang 1.23.5
+golang 1.25.11
 nodejs 24.15.0
 python 3.13.1
 ```
@@ -168,6 +169,7 @@ shell lint(shellcheck/shfmt), `stylua --check lua/`, help tag 빌드와 `doc/tag
 | macism | `brew install macism` | 불필요 | 한/영 전환 |
 | gh | `brew install gh` | `apt install gh` | Octo GitHub PR/issue |
 | kubectl | 환경별 설치 | 동일 | kubectl.nvim 클러스터 뷰 |
+| GITLAB_TOKEN/URL | shell rc에 export | 동일 | gitlab.nvim MR 리뷰 (secrets 커밋 금지) |
 | alloy | Grafana 공식 설치 | 동일 | Alloy 포맷/검증 |
 | go | `asdf install golang` | 동일 | Go 개발 |
 | ansible-lint | `pip install ansible-lint` | 동일 | Ansible 린트 |
