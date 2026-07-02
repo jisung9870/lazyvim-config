@@ -2,6 +2,32 @@
 -- 에디터 기능: 한/영 전환 + Telescope 커스터마이징
 -- ========================================
 
+local function tmux_sessionizer_dirs()
+  local config_home = vim.env.XDG_CONFIG_HOME or vim.fn.expand("~/.config")
+  local config_file = config_home .. "/tmux-sessionizer/dirs"
+  local dirs = {}
+  if vim.fn.filereadable(config_file) == 1 then
+    for _, line in ipairs(vim.fn.readfile(config_file)) do
+      line = vim.trim(line)
+      if line ~= "" and not line:match("^#") then
+        line = vim.fn.expand(line)
+        if vim.fn.isdirectory(line) == 1 then
+          table.insert(dirs, vim.fs.normalize(line))
+        end
+      end
+    end
+  end
+
+  if #dirs == 0 then
+    dirs = {
+      vim.fn.expand("~/home/projects"),
+      vim.fn.expand("~/home/work"),
+    }
+  end
+
+  return dirs
+end
+
 return {
   -- ==============================
   -- 1. 한/영 자동 전환 (macOS 전용, macism 사용)
@@ -70,6 +96,29 @@ return {
           require("telescope.builtin").find_files({ cwd = require("lazy.core.config").options.root })
         end,
         desc = "Find Plugin File",
+      },
+    },
+  },
+
+  -- ==============================
+  -- 3. Snacks Project Picker
+  -- ==============================
+  {
+    "folke/snacks.nvim",
+    opts = function(_, opts)
+      opts.picker = opts.picker or {}
+      opts.picker.sources = opts.picker.sources or {}
+      opts.picker.sources.projects = opts.picker.sources.projects or {}
+      opts.picker.sources.projects.dev = tmux_sessionizer_dirs()
+      return opts
+    end,
+    keys = {
+      {
+        "<leader>fp",
+        function()
+          Snacks.picker.projects({ dev = tmux_sessionizer_dirs() })
+        end,
+        desc = "Projects",
       },
     },
   },

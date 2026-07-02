@@ -77,6 +77,37 @@ Neovim split:
   - 임시 명령은 floating terminal로 처리한다.
 
 ==============================================================================
+Project session                                      *nvim-terminal-tmux-session*
+
+tmux session은 project 단위로 만들고, Neovim project picker는 같은 후보
+디렉토리를 사용한다.
+
+Project 후보 부모 디렉토리:
+>
+  ~/.config/tmux-sessionizer/dirs
+<
+
+tmux에서 project session 전환/생성:
+>
+  prefix f
+<
+
+Neovim에서 같은 sessionizer 실행:
+>
+  <leader>tp
+<
+
+Neovim project picker:
+>
+  <leader>fp
+<
+
+mental model:
+  - session을 새로 만들거나 바꿀 때는 `tmux-sessionizer`를 쓴다.
+  - Neovim 안에서 파일/grep/explorer를 열 때는 `<leader>fp`를 쓴다.
+  - 둘 다 `~/.config/tmux-sessionizer/dirs`를 기준으로 project 후보를 잡는다.
+
+==============================================================================
 반복 명령                                            *nvim-terminal-tmux-task*
 
 반복해서 실행하는 명령은 terminal에 직접 치기보다 Overseer task로 실행한다.

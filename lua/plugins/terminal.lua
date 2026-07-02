@@ -50,6 +50,19 @@ return {
       { "<leader>th", "<cmd>ToggleTerm size=15 direction=horizontal<cr>", desc = "Horizontal terminal" },
       { "<leader>tv", "<cmd>ToggleTerm size=80 direction=vertical<cr>", desc = "Vertical terminal" },
       { "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", desc = "Floating terminal" },
+      {
+        "<leader>tp",
+        function()
+          local Terminal = require("toggleterm.terminal").Terminal
+          Terminal:new({
+            cmd = "tmux-sessionizer",
+            direction = "float",
+            close_on_exit = true,
+            hidden = true,
+          }):toggle()
+        end,
+        desc = "Tmux project sessionizer",
+      },
 
       -- 터미널 모드에서 ESC로 나가기
       { "<Esc>", [[<C-\><C-n>]], mode = "t", desc = "Exit terminal mode" },

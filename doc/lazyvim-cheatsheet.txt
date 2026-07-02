@@ -34,7 +34,7 @@ jk                     Insert 모드 종료
 <leader>fg             Git tracked 파일 찾기
 <leader>fr             최근 파일
 <leader>fb             버퍼 목록
-<leader>fp             Project 목록
+<leader>fp             Project 목록(tmux-sessionizer dirs 기준)
 <leader>fP             Lazy 플러그인 파일 찾기
 <leader>fn             새 파일
 <leader>sg             Grep 검색
@@ -178,11 +178,13 @@ gy                     type definition
 <leader>tf             floating terminal
 <leader>th             horizontal terminal
 <leader>tv             vertical terminal
+<leader>tp             tmux-sessionizer로 project session 전환/생성
 터미널에서 <Esc>       terminal mode 종료
 <leader>qq             Neovim 전체 종료
 
 tmux 사용 시:
   <C-h/j/k/l>           Neovim window와 tmux pane 사이를 같은 키로 이동
+  prefix f              tmux-sessionizer로 project session 전환/생성
 
 ==============================================================================
 UI Toggle                                             *lazyvim-cheatsheet-ui*
