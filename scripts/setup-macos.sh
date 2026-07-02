@@ -11,6 +11,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$SCRIPT_DIR/scripts/lib/setup-common.sh"
 # shellcheck source=scripts/lib/setup-versions.sh
 source "$SCRIPT_DIR/scripts/lib/setup-versions.sh"
+setup_interrupt_trap
 parse_setup_flags "$@"
 print_mode_summary
 sync_repository

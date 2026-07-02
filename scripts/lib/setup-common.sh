@@ -429,6 +429,15 @@ install_asdf_tool() {
   run_step "asdf $plugin reshim" asdf reshim "$plugin"
 }
 
+# Ctrl+C 등으로 중단됐을 때 재실행 안내를 남김
+setup_interrupt_trap() {
+  trap '{
+    printf "\n" >&2
+    warn "중단됨: 일부 단계가 완료되지 않았을 수 있습니다. 같은 플래그로 재실행하면 이어서 진행됩니다."
+    exit 130
+  }' INT TERM
+}
+
 check_tpm_status() {
   local tpm_dir="$HOME/.tmux/plugins/tpm"
 
