@@ -18,11 +18,14 @@ local function tmux_sessionizer_dirs()
     end
   end
 
+  -- dirs 파일이 없으면 관례적 위치로 폴백 (존재하는 디렉토리만)
   if #dirs == 0 then
-    dirs = {
-      vim.fn.expand("~/home/projects"),
-      vim.fn.expand("~/home/work"),
-    }
+    for _, fallback in ipairs({ "~/home/projects", "~/home/work" }) do
+      fallback = vim.fn.expand(fallback)
+      if vim.fn.isdirectory(fallback) == 1 then
+        table.insert(dirs, vim.fs.normalize(fallback))
+      end
+    end
   end
 
   return dirs

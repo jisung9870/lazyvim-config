@@ -216,10 +216,13 @@ ensure_links_and_local_config() {
   local tmux_config_src="$SCRIPT_DIR/scripts/config/.tmux.conf"
   local tmux_config_dest="$HOME/.tmux.conf"
   local local_lua="$SCRIPT_DIR/lua/config/local.lua"
+  local sessionizer_dirs="${XDG_CONFIG_HOME:-$HOME/.config}/tmux-sessionizer/dirs"
+  local sessionizer_example="$SCRIPT_DIR/scripts/config/tmux-sessionizer.dirs.example"
 
   ensure_symlink "$SCRIPT_DIR" "$nvim_config_dir" "nvim 설정"
   ensure_symlink "$tmux_config_src" "$tmux_config_dest" "tmux 설정"
   write_file_if_missing "$local_lua" "macOS local.lua" "$(local_lua_template)"
+  write_file_if_missing "$sessionizer_dirs" "tmux-sessionizer dirs" "$(cat "$sessionizer_example")"
 }
 
 check_links_and_local_config() {
@@ -227,6 +230,7 @@ check_links_and_local_config() {
   local tmux_config_src="$SCRIPT_DIR/scripts/config/.tmux.conf"
   local tmux_config_dest="$HOME/.tmux.conf"
   local local_lua="$SCRIPT_DIR/lua/config/local.lua"
+  local sessionizer_dirs="${XDG_CONFIG_HOME:-$HOME/.config}/tmux-sessionizer/dirs"
 
   check_symlink_status "$SCRIPT_DIR" "$nvim_config_dir" "nvim 설정" || true
   check_symlink_status "$tmux_config_src" "$tmux_config_dest" "tmux 설정" || true
@@ -234,6 +238,11 @@ check_links_and_local_config() {
     ok "local.lua 존재: $local_lua"
   else
     warn "local.lua 없음 (--link 사용 시 템플릿 생성)"
+  fi
+  if [ -f "$sessionizer_dirs" ]; then
+    ok "tmux-sessionizer dirs 존재: $sessionizer_dirs"
+  else
+    warn "tmux-sessionizer dirs 없음 (--link 사용 시 예시로 생성)"
   fi
 }
 

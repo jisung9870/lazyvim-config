@@ -87,6 +87,10 @@ Project 후보 부모 디렉토리:
   ~/.config/tmux-sessionizer/dirs
 <
 
+이 파일이 없으면 `./scripts/setup.sh --link`가
+`scripts/config/tmux-sessionizer.dirs.example`을 복사해서 만들어준다.
+머신에 맞게 내용을 수정하면 된다 (git에 커밋되지 않음).
+
 tmux에서 project session 전환/생성:
 >
   prefix f
