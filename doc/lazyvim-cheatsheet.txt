@@ -142,6 +142,15 @@ Octo (GitHub, gh CLI 인증 필요):
 <leader>gos            GitHub 검색
 PR/Issue 버퍼 안에서 <localleader> 그룹으로 코멘트/리뷰/머지
 
+GitLab (사내 self-hosted, GITLAB_TOKEN/GITLAB_URL 필요):
+<leader>gmm            MR 선택
+<leader>gmr            현재 브랜치 MR 리뷰 (diff)
+<leader>gms            MR summary
+<leader>gmp            파이프라인 보기
+<leader>gma            MR 승인
+<leader>gmA            승인 취소
+<leader>gmc            MR 생성
+
 GitGraph 안에서:
   Enter                 커서의 commit을 Diffview로 열기
   Visual 선택 + Enter   선택한 commit 범위를 Diffview로 열기

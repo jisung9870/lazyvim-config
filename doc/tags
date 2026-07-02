@@ -22,6 +22,7 @@ nvim-devops-workflow-yaml	nvim-devops-workflow.txt	/*nvim-devops-workflow-yaml*
 nvim-git-workflow	nvim-git-workflow.txt	/*nvim-git-workflow*
 nvim-git-workflow-blame	nvim-git-workflow.txt	/*nvim-git-workflow-blame*
 nvim-git-workflow-daily	nvim-git-workflow.txt	/*nvim-git-workflow-daily*
+nvim-git-workflow-gitlab	nvim-git-workflow.txt	/*nvim-git-workflow-gitlab*
 nvim-git-workflow-history	nvim-git-workflow.txt	/*nvim-git-workflow-history*
 nvim-git-workflow-notes	nvim-git-workflow.txt	/*nvim-git-workflow-notes*
 nvim-git-workflow-octo	nvim-git-workflow.txt	/*nvim-git-workflow-octo*
