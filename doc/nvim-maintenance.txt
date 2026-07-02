@@ -105,6 +105,11 @@ Lockfile 규칙:
   git diff -- lazy-lock.json
 <
 
+tmux plugin lockfile (`scripts/config/tmux-plugins.lock`):
+  - setup 점검 모드가 설치된 plugin 커밋과 lock을 대조해 경고한다.
+  - `--install --with-tmux-plugins` 실행 후 설치 상태로 재생성된다.
+  - 재생성된 lock의 커밋 여부는 수동으로 판단한다 (의도한 변경만 커밋).
+
 ==============================================================================
 커밋 규칙                                            *nvim-maintenance-commit*
 
@@ -170,6 +175,9 @@ Setup script:
 <
 
 검증을 실행하지 못한 경우에는 이유를 최종 보고에 남긴다.
+
+push/PR 시 GitHub Actions `Checks` 워크플로가 shell lint,
+`stylua --check lua/`, help tag 최신 여부, `test-setup.sh`를 실행한다.
 
 ==============================================================================
 로컬/비밀 정보                                       *nvim-maintenance-local*

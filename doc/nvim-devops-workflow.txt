@@ -40,17 +40,27 @@ DevOps 파일을 열면 아래 순서로 확인한다.
 ==============================================================================
 YAML과 Kubernetes                                  *nvim-devops-workflow-yaml*
 
-YAML schema 선택:
+K8s manifest를 열면 schema-companion이 `apiVersion`/`kind`를 읽어
+자동으로 schema를 적용하고, 현재 schema는 상태바에 표시된다
+(예: `Deployment@apps/v1 [v1.33.1]`).
+
+YAML schema 수동 선택:
 >
   <leader>ys
 <
 
 자동 schema 후보:
-  - Kubernetes strict schema
+  - Kubernetes strict schema (+ CRD catalog)
   - Kustomization
   - Helm `Chart.yaml`
   - GitHub workflow/action
   - Docker Compose
+
+Kubernetes schema 버전은 클러스터에 맞게 `lua/config/local.lua`에서
+바꿀 수 있다:
+>
+  vim.g.k8s_schema_version = "v1.30.0"
+<
 
 주의:
   - YAML은 prettier가 구조를 바꿀 수 있으므로 이상하면 diff를 확인한다.
