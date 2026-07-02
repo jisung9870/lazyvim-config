@@ -42,6 +42,7 @@ nvim-python-go-test	nvim-python-go.txt	/*nvim-python-go-test*
 nvim-python-go-title	nvim-python-go.txt	/*nvim-python-go-title*
 nvim-python-go-trouble	nvim-python-go.txt	/*nvim-python-go-trouble*
 nvim-terminal-tmux	nvim-terminal-tmux.txt	/*nvim-terminal-tmux*
+nvim-terminal-tmux-config	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-config*
 nvim-terminal-tmux-mode	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-mode*
 nvim-terminal-tmux-nav	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-nav*
 nvim-terminal-tmux-open	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-open*

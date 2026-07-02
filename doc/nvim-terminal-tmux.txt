@@ -108,6 +108,33 @@ mental model:
   - 둘 다 `~/.config/tmux-sessionizer/dirs`를 기준으로 project 후보를 잡는다.
 
 ==============================================================================
+tmux 설정 관리                                      *nvim-terminal-tmux-config*
+
+tmux 설정은 이 리포지토리에서 관리하고 홈에는 symlink만 둔다:
+>
+  ~/.tmux.conf -> <repo>/scripts/config/.tmux.conf
+<
+
+동기화 규칙:
+  - 리포지토리 파일을 수정하거나 `git pull` 하면 내용은 즉시 반영된다.
+  - 단, 실행 중인 tmux server에 적용하려면 리로드가 필요하다:
+>
+  prefix r
+<
+  - symlink가 없으면 `./scripts/setup.sh --link`로 생성한다.
+
+머신별 로컬 설정은 git에 커밋하지 않고 아래 파일에 둔다
+(`lua/config/local.lua`와 같은 패턴):
+>
+  ~/.tmux.conf.local
+<
+
+agents CLI가 설치된 머신에서는 팝업 바인딩이 활성화된다:
+>
+  prefix a
+<
+
+==============================================================================
 반복 명령                                            *nvim-terminal-tmux-task*
 
 반복해서 실행하는 명령은 terminal에 직접 치기보다 Overseer task로 실행한다.
