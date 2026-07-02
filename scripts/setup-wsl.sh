@@ -305,13 +305,9 @@ install_go_tools() {
 ensure_tpm() {
   local tpm_dir="$HOME/.tmux/plugins/tpm"
 
-  if [ "$WITH_TMUX_PLUGINS" != true ]; then
+  if [ "$WITH_TMUX_PLUGINS" != true ] || [ "$INSTALL" != true ]; then
     check_tpm_status
-    return 0
-  fi
-
-  if [ "$INSTALL" != true ]; then
-    check_tpm_status
+    check_tmux_plugins_lock
     return 0
   fi
 
@@ -324,6 +320,7 @@ ensure_tpm() {
 
   if [ "$DRY_RUN" = true ] || [ -x "$tpm_dir/bin/install_plugins" ]; then
     run_step "tmux 플러그인 설치 (TPM)" "$tpm_dir/bin/install_plugins"
+    record_tmux_plugins_lock
   fi
 }
 

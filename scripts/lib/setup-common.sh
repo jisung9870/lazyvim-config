@@ -439,6 +439,90 @@ check_tpm_status() {
   fi
 }
 
+# .tmux.conf의 @plugin 선언 목록을 <user>/<repo>[#pin] 형태로 출력
+tmux_plugin_entries() {
+  local tmux_conf="$SCRIPT_DIR/scripts/config/.tmux.conf"
+
+  [ -f "$tmux_conf" ] || return 0
+  sed -nE "s/^set -g @plugin '([^']+)'.*/\1/p" "$tmux_conf"
+}
+
+# 설치된 tmux 플러그인 커밋을 lock 파일과 대조하고 불일치를 경고
+check_tmux_plugins_lock() {
+  local lock_file="$SCRIPT_DIR/scripts/config/tmux-plugins.lock"
+  local plugins_dir="$HOME/.tmux/plugins"
+  local name sha repo_dir head mismatch=0
+
+  [ -f "$lock_file" ] || {
+    warn "tmux plugins lockfile 없음: $lock_file"
+    return 0
+  }
+  [ -d "$plugins_dir" ] || return 0
+
+  while read -r name sha; do
+    case "$name" in "" | \#*) continue ;; esac
+    repo_dir="$plugins_dir/$(basename "${name%%#*}")"
+    if [ ! -d "$repo_dir/.git" ]; then
+      warn "lock에 있으나 미설치: $name"
+      mismatch=$((mismatch + 1))
+      continue
+    fi
+    head="$(git -C "$repo_dir" rev-parse HEAD 2>/dev/null || echo unknown)"
+    if [ "$head" != "$sha" ]; then
+      warn "tmux 플러그인 커밋 불일치: $name (lock ${sha:0:7} / 설치 ${head:0:7})"
+      mismatch=$((mismatch + 1))
+    fi
+  done <"$lock_file"
+
+  if [ "$mismatch" -eq 0 ]; then
+    ok "tmux 플러그인이 lockfile과 일치"
+  else
+    warn "tmux 플러그인 lock 불일치 ${mismatch}건 (--install --with-tmux-plugins로 재설치 후 lock 재생성)"
+  fi
+}
+
+# 설치된 tmux 플러그인 상태로 lock 파일을 재생성
+record_tmux_plugins_lock() {
+  local lock_file="$SCRIPT_DIR/scripts/config/tmux-plugins.lock"
+  local plugins_dir="$HOME/.tmux/plugins"
+  local entry name repo_dir head
+
+  if [ "$DRY_RUN" = true ]; then
+    info "DRY-RUN: tmux plugins lockfile 재생성: $lock_file"
+    return 0
+  fi
+  [ -d "$plugins_dir" ] || return 0
+
+  {
+    printf '# tmux plugins lockfile\n'
+    printf '# Generated: %s (setup script)\n' "$(date +%Y-%m-%d)"
+    cat <<'LOCKHEADER'
+# Source of truth: `set -g @plugin` directives in scripts/config/.tmux.conf
+# Format: <github_user>/<repo> <commit_sha>
+#
+# Setup scripts install plugins via TPM and regenerate this file from the
+# installed commits. Use it as a known-good reference for new machines.
+#
+# To pin a plugin to an exact version, add `#<tag|sha>` to its @plugin
+# line in .tmux.conf (e.g. `catppuccin/tmux#v2.1.3`).
+
+LOCKHEADER
+    while read -r entry; do
+      [ -n "$entry" ] || continue
+      name="${entry%%#*}"
+      repo_dir="$plugins_dir/$(basename "$name")"
+      if [ -d "$repo_dir/.git" ]; then
+        head="$(git -C "$repo_dir" rev-parse HEAD 2>/dev/null || echo unknown)"
+      else
+        head="not-installed"
+      fi
+      printf '%-33s %s\n' "$name" "$head"
+    done < <(tmux_plugin_entries)
+  } >"$lock_file"
+
+  ok "tmux plugins lockfile 재생성 완료: $lock_file"
+}
+
 ensure_git_repo_for_sync() {
   git -C "$SCRIPT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1 ||
     error "--sync는 git repository 안에서만 사용할 수 있습니다: $SCRIPT_DIR"
