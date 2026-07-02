@@ -24,6 +24,7 @@ if grep -qEi "(microsoft|wsl)" /proc/version 2>/dev/null; then
 fi
 
 ARCH="$(detect_arch)"
+TMP_DIR="${TMPDIR:-/tmp}"
 GOLANG_VERSION="$(read_tool_version golang)"
 NODEJS_VERSION="$(read_tool_version nodejs)"
 PYTHON_VERSION="$(read_tool_version python)"
@@ -129,7 +130,7 @@ nvim_appimage_asset() {
 
 ensure_neovim() {
   local asset
-  local target="/tmp/nvim-${NVIM_VERSION}.appimage"
+  local target="${TMP_DIR}/nvim-${NVIM_VERSION}.appimage"
 
   if ! nvim_needs_install; then
     ok "Neovim 확인됨 ($(nvim --version | head -1))"
@@ -190,10 +191,10 @@ ensure_lazygit() {
   asset_arch="$(lazygit_asset_arch)"
   run_step "lazygit 최신 release 설치" bash -c "set -euo pipefail
 version=\$(curl -fsSL https://api.github.com/repos/jesseduffield/lazygit/releases/latest | grep -Po '\"tag_name\": \"v\\K[^\"]*')
-curl -fsSLo /tmp/lazygit.tar.gz \"https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_\${version}_Linux_${asset_arch}.tar.gz\"
-tar -xf /tmp/lazygit.tar.gz -C /tmp lazygit
-sudo install /tmp/lazygit /usr/local/bin/lazygit
-rm -f /tmp/lazygit /tmp/lazygit.tar.gz"
+curl -fsSLo '$TMP_DIR/lazygit.tar.gz' \"https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_\${version}_Linux_${asset_arch}.tar.gz\"
+tar -xf '$TMP_DIR/lazygit.tar.gz' -C '$TMP_DIR' lazygit
+sudo install '$TMP_DIR/lazygit' /usr/local/bin/lazygit
+rm -f '$TMP_DIR/lazygit' '$TMP_DIR/lazygit.tar.gz'"
 }
 
 check_runtime_state() {
@@ -243,11 +244,11 @@ ensure_stylua() {
     asset_arch="$(stylua_asset_arch)"
     run_step "stylua 최신 release 설치" bash -c "set -euo pipefail
 version=\$(curl -fsSL https://api.github.com/repos/JohnnyMorganz/StyLua/releases/latest | grep -Po '\"tag_name\": \"\\K[^\"]*')
-rm -rf /tmp/stylua-bin
-curl -fsSLo /tmp/stylua.zip \"https://github.com/JohnnyMorganz/StyLua/releases/download/\${version}/stylua-linux-${asset_arch}.zip\"
-unzip -o /tmp/stylua.zip -d /tmp/stylua-bin
-sudo install /tmp/stylua-bin/stylua /usr/local/bin/stylua
-rm -rf /tmp/stylua.zip /tmp/stylua-bin"
+rm -rf '$TMP_DIR/stylua-bin'
+curl -fsSLo '$TMP_DIR/stylua.zip' \"https://github.com/JohnnyMorganz/StyLua/releases/download/\${version}/stylua-linux-${asset_arch}.zip\"
+unzip -o '$TMP_DIR/stylua.zip' -d '$TMP_DIR/stylua-bin'
+sudo install '$TMP_DIR/stylua-bin/stylua' /usr/local/bin/stylua
+rm -rf '$TMP_DIR/stylua.zip' '$TMP_DIR/stylua-bin'"
   else
     warn "stylua 없음 (--install 사용 시 설치)"
   fi
@@ -337,10 +338,10 @@ ensure_font() {
 version=\$(curl -fsSL https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest | grep -Po '\"tag_name\": \"\\K[^\"]*')
 rm -rf '$font_dir/JetBrainsMono'
 mkdir -p '$font_dir/JetBrainsMono'
-curl -fsSLo /tmp/JetBrainsMono.zip \"https://github.com/ryanoasis/nerd-fonts/releases/download/\${version}/JetBrainsMono.zip\"
-unzip -o /tmp/JetBrainsMono.zip -d '$font_dir/JetBrainsMono'
+curl -fsSLo '$TMP_DIR/JetBrainsMono.zip' \"https://github.com/ryanoasis/nerd-fonts/releases/download/\${version}/JetBrainsMono.zip\"
+unzip -o '$TMP_DIR/JetBrainsMono.zip' -d '$font_dir/JetBrainsMono'
 fc-cache -fv '$font_dir' >/dev/null 2>&1
-rm -f /tmp/JetBrainsMono.zip"
+rm -f '$TMP_DIR/JetBrainsMono.zip'"
     if [ "$IS_WSL" = true ]; then
       warn "WSL 사용자: Windows Terminal 설정에서 폰트를 'JetBrainsMono Nerd Font'로 변경해주세요"
     fi
