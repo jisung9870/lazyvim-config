@@ -112,6 +112,21 @@ mental model:
   - 둘 다 `~/.config/tmux-sessionizer/dirs`를 기준으로 project 후보를 잡는다.
 
 ==============================================================================
+화면 텍스트 복사 (extrakto)                       *nvim-terminal-tmux-extrakto*
+
+pane에 보이는 텍스트(pod 이름, IP, 해시, 경로)를 fzf로 골라
+복사하거나 현재 pane에 삽입한다:
+>
+  prefix Tab
+<
+
+fzf 안에서:
+  - Enter          현재 pane에 삽입
+  - Ctrl+c         클립보드로 복사
+  - Ctrl+o         열기 (URL 등)
+  - Tab            word/line/path 필터 전환
+
+==============================================================================
 tmux 설정 관리                                      *nvim-terminal-tmux-config*
 
 tmux 설정은 이 리포지토리에서 관리하고 홈에는 symlink만 둔다:
