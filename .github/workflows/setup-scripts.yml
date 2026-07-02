@@ -1,4 +1,4 @@
-name: Setup scripts
+name: Checks
 
 on:
   pull_request:
@@ -29,3 +29,42 @@ jobs:
 
       - name: shfmt
         run: shfmt -d -i 2 -ci scripts/setup.sh scripts/setup-macos.sh scripts/setup-wsl.sh scripts/lib/setup-common.sh scripts/lib/setup-versions.sh scripts/test-setup.sh
+
+  lua:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install stylua
+        run: |
+          curl -fsSLo /tmp/stylua.zip https://github.com/JohnnyMorganz/StyLua/releases/download/v2.5.2/stylua-linux-x86_64.zip
+          unzip -o /tmp/stylua.zip -d /tmp/stylua-bin
+          sudo install /tmp/stylua-bin/stylua /usr/local/bin/stylua
+
+      - name: stylua check
+        run: stylua --check lua/
+
+  nvim:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Neovim
+        run: |
+          source scripts/lib/setup-versions.sh
+          curl -fsSLo /tmp/nvim.tar.gz "https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/nvim-linux64.tar.gz"
+          sudo tar -xzf /tmp/nvim.tar.gz -C /opt
+          sudo ln -sf /opt/nvim-linux64/bin/nvim /usr/local/bin/nvim
+          nvim --version
+
+      - name: Help tags check
+        run: |
+          nvim --headless -u NONE --cmd "set rtp+=." "+helptags doc" "+h lazyvim-cheatsheet" +qa
+          git diff --exit-code doc/tags
+
+      - name: test-setup.sh
+        run: ./scripts/test-setup.sh
