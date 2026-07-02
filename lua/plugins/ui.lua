@@ -184,12 +184,58 @@ return {
         return target
       end
 
+      local show_details = false
+
+      local function human_size(size)
+        if size < 1024 then
+          return tostring(size) .. "B"
+        end
+        local units = { "K", "M", "G", "T" }
+        local value, unit = size, ""
+        for _, u in ipairs(units) do
+          value = value / 1024
+          unit = u
+          if value < 1024 then
+            break
+          end
+        end
+        return ("%.1f%s"):format(value, unit)
+      end
+
       opts.picker = opts.picker or {}
       opts.picker.sources = opts.picker.sources or {}
       opts.picker.sources.explorer = opts.picker.sources.explorer or {}
 
       local explorer = opts.picker.sources.explorer
+
+      explorer.format = function(item, picker)
+        local ret = Snacks.picker.format.file(item, picker)
+        if not show_details or not item.file then
+          return ret
+        end
+        local stat = uv.fs_stat(item.file)
+        if not stat then -- 깨진 symlink, 삭제 경합 등
+          return ret
+        end
+        local size = item.dir and "-" or human_size(stat.size)
+        local mtime = os.date("%Y-%m-%d %H:%M", stat.mtime.sec)
+        ret[#ret + 1] = {
+          col = 0,
+          virt_text = {
+            { Snacks.picker.util.align(size, 8, { align = "right" }), "SnacksPickerDimmed" },
+            { "  " .. mtime .. " ", "SnacksPickerDimmed" },
+          },
+          virt_text_pos = "right_align",
+          hl_mode = "combine",
+        }
+        return ret
+      end
+
       explorer.actions = explorer.actions or {}
+      explorer.actions.explorer_toggle_details = function(picker)
+        show_details = not show_details
+        picker.list:update({ force = true })
+      end
       explorer.actions.explorer_duplicate = function(picker)
         local paths = vim.tbl_map(Snacks.picker.util.path, picker:selected({ fallback = true }))
         paths = vim.tbl_filter(function(path)
@@ -217,6 +263,7 @@ return {
       explorer.win.list = explorer.win.list or {}
       explorer.win.list.keys = explorer.win.list.keys or {}
       explorer.win.list.keys["C"] = "explorer_duplicate"
+      explorer.win.list.keys["T"] = { "explorer_toggle_details", desc = "Toggle file details" }
       explorer.win.list.keys["M"] = "toggle_maximize"
       explorer.win.list.keys["-"] = "edit_split"
       explorer.win.list.keys["|"] = "edit_vsplit"
