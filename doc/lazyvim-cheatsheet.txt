@@ -133,6 +133,15 @@ Git                                                     *lazyvim-cheatsheet-git*
 ]h / [h                다음/이전 hunk
 ]H / [H                마지막/첫 hunk
 
+Octo (GitHub, gh CLI 인증 필요):
+<leader>gop            PR 목록
+<leader>goP            PR 검색
+<leader>goi            Issue 목록
+<leader>goI            Issue 검색
+<leader>gor            Repo 목록
+<leader>gos            GitHub 검색
+PR/Issue 버퍼 안에서 <localleader> 그룹으로 코멘트/리뷰/머지
+
 GitGraph 안에서:
   Enter                 커서의 commit을 Diffview로 열기
   Visual 선택 + Enter   선택한 commit 범위를 Diffview로 열기
@@ -185,6 +194,7 @@ gy                     type definition
 tmux 사용 시:
   <C-h/j/k/l>           Neovim window와 tmux pane 사이를 같은 키로 이동
   prefix f              tmux-sessionizer로 project session 전환/생성
+  prefix Tab            extrakto: 화면 텍스트를 fzf로 골라 복사/삽입
 
 ==============================================================================
 UI Toggle                                             *lazyvim-cheatsheet-ui*
@@ -217,6 +227,7 @@ UI Toggle                                             *lazyvim-cheatsheet-ui*
 <leader>cv             Python virtualenv 선택
 <leader>cV             현재 project에 .venv 생성 후 선택
 <leader>ys             YAML schema 선택
+<leader>k              kubectl.nvim 클러스터 뷰 toggle (안에서 g?로 도움말)
 <leader>tc             CSV view toggle
 <leader>oo             Overseer task 실행
 <leader>ow             Overseer task list
