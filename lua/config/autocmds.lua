@@ -95,6 +95,30 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 })
 
 -- ========================================
+-- 저장 시 자동 포맷 제외 (LazyVim autoformat 제어)
+-- ========================================
+-- conform의 format_on_save는 LazyVim이 무시하므로
+-- vim.b.autoformat으로 버퍼별 자동 포맷을 끔
+-- 수동 포맷(<Space>cf)은 여전히 가능
+
+-- 의도적 공백/형식을 보존해야 하는 파일 타입
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "text", "gitcommit", "gitrebase" },
+  callback = function()
+    vim.b.autoformat = false
+  end,
+})
+
+-- 큰 파일(2000줄 초과)은 자동 포맷 건너뛰기
+vim.api.nvim_create_autocmd("BufReadPost", {
+  callback = function(event)
+    if vim.api.nvim_buf_line_count(event.buf) > 2000 then
+      vim.b[event.buf].autoformat = false
+    end
+  end,
+})
+
+-- ========================================
 -- Cursorline 자동 토글 (Insert 모드에서 비활성화)
 -- ========================================
 

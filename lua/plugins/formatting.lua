@@ -1,5 +1,5 @@
 -- ========================================
--- Format on Save 세밀 제어 (conform.nvim)
+-- 파일 타입별 포맷터 지정 (conform.nvim)
 -- ========================================
 --
 -- 문제:
@@ -8,11 +8,18 @@
 --   Markdown은 의도적 공백을 제거할 수 있음
 --
 -- 해결:
---   파일 타입별로 포맷터와 동작 방식을 다르게 설정
+--   파일 타입별로 포맷터를 다르게 설정
+--
+-- 주의:
+--   conform의 format_on_save 옵션은 LazyVim이 무시하고 버림
+--   (LazyVim 자체 autoformat이 저장 시 포맷을 담당)
+--   파일 타입/크기별 자동 포맷 제외는 autocmds.lua에서
+--   vim.b.autoformat으로 제어함
 --
 -- 참고:
 --   HCL (Alloy) 포맷터는 lang-devops.lua에서 설정
 --   (alloy CLI 유무에 따른 condition 처리 포함)
+--   포맷 timeout은 LazyVim 기본값(default_format_opts.timeout_ms = 3000) 사용
 --
 -- 이미 있는 기능:
 --   <Space>cf  → 수동 포맷
@@ -55,37 +62,6 @@ return {
       -- 그 외: LSP 포맷터 사용
       ["_"] = { "trim_whitespace" },
     },
-
-    -- ==============================
-    -- 저장 시 자동 포맷 설정
-    -- ==============================
-    format_on_save = function(bufnr)
-      -- 포맷 비활성화할 파일 타입
-      local disable_filetypes = {
-        "markdown",
-        "text",
-        "gitcommit",
-        "gitrebase",
-      }
-
-      local filetype = vim.bo[bufnr].filetype
-      for _, ft in ipairs(disable_filetypes) do
-        if filetype == ft then
-          return nil -- 포맷 안 함
-        end
-      end
-
-      -- 큰 파일은 포맷 건너뛰기 (2000줄 초과)
-      local line_count = vim.api.nvim_buf_line_count(bufnr)
-      if line_count > 2000 then
-        return nil
-      end
-
-      return {
-        timeout_ms = 3000,
-        lsp_format = "fallback", -- conform 포맷터 없으면 LSP 사용
-      }
-    end,
 
     -- ==============================
     -- 포맷터별 옵션
