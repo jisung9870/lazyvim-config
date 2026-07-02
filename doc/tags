@@ -24,6 +24,7 @@ nvim-git-workflow-blame	nvim-git-workflow.txt	/*nvim-git-workflow-blame*
 nvim-git-workflow-daily	nvim-git-workflow.txt	/*nvim-git-workflow-daily*
 nvim-git-workflow-history	nvim-git-workflow.txt	/*nvim-git-workflow-history*
 nvim-git-workflow-notes	nvim-git-workflow.txt	/*nvim-git-workflow-notes*
+nvim-git-workflow-octo	nvim-git-workflow.txt	/*nvim-git-workflow-octo*
 nvim-git-workflow-title	nvim-git-workflow.txt	/*nvim-git-workflow-title*
 nvim-git-workflow-tools	nvim-git-workflow.txt	/*nvim-git-workflow-tools*
 nvim-maintenance	nvim-maintenance.txt	/*nvim-maintenance*
@@ -43,6 +44,7 @@ nvim-python-go-title	nvim-python-go.txt	/*nvim-python-go-title*
 nvim-python-go-trouble	nvim-python-go.txt	/*nvim-python-go-trouble*
 nvim-terminal-tmux	nvim-terminal-tmux.txt	/*nvim-terminal-tmux*
 nvim-terminal-tmux-config	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-config*
+nvim-terminal-tmux-extrakto	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-extrakto*
 nvim-terminal-tmux-mode	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-mode*
 nvim-terminal-tmux-nav	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-nav*
 nvim-terminal-tmux-open	nvim-terminal-tmux.txt	/*nvim-terminal-tmux-open*

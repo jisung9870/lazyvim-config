@@ -26,6 +26,7 @@ BREW_PACKAGES=(
   ripgrep
   fd
   lazygit
+  gh
   tmux
   fzf
   tree-sitter

@@ -17,6 +17,8 @@ lua/
 │   ├── editor.lua      # 한/영 전환 (macOS), Telescope
 │   ├── formatting.lua  # conform.nvim 포맷터 설정
 │   ├── git.lua         # Diffview + Gitsigns
+│   ├── kubectl.lua     # kubectl.nvim (클러스터 뷰/로그/exec)
+│   ├── octo.lua        # Octo 키맵 조정 (extras.util.octo)
 │   ├── lang-devops.lua # Nginx, Alloy, Ansible LSP
 │   ├── lang-go.lua     # Go 개발 환경 (gopls, neotest, DAP)
 │   ├── linting.lua     # nvim-lint DevOps 린터 설정
@@ -157,13 +159,15 @@ shell lint(shellcheck/shfmt), `stylua --check lua/`, help tag 빌드와 `doc/tag
 `:LazyExtras`로 관리. 주요 활성화 항목:
 - `lang.go`, `lang.yaml`, `lang.json`, `lang.terraform`, `lang.ansible`
 - `dap.core`, `coding.mini-comment`, `coding.mini-surround`
-- `ai.copilot`
+- `ai.copilot`, `util.octo` (GitHub PR 리뷰, gh CLI 필요)
 
 ## 필요 도구
 
 | 도구 | macOS | WSL/Linux | 용도 |
 |------|-------|-----------|------|
 | macism | `brew install macism` | 불필요 | 한/영 전환 |
+| gh | `brew install gh` | `apt install gh` | Octo GitHub PR/issue |
+| kubectl | 환경별 설치 | 동일 | kubectl.nvim 클러스터 뷰 |
 | alloy | Grafana 공식 설치 | 동일 | Alloy 포맷/검증 |
 | go | `asdf install golang` | 동일 | Go 개발 |
 | ansible-lint | `pip install ansible-lint` | 동일 | Ansible 린트 |

@@ -16,6 +16,7 @@ GitGraph                브랜치와 commit graph 탐색
 Diffview                commit/file/branch 변경 내용 비교
 Gitsigns                현재 buffer의 hunk 단위 stage/reset/blame
 Snacks git picker       빠른 log, file history, browse
+Octo                    GitHub PR/issue 리뷰와 코멘트 (gh CLI 필요)
 
 기본 판단:
   - Git 작업을 실행하려면 GitUI
@@ -97,6 +98,32 @@ Git URL 복사:
 >
   <leader>gY
 <
+
+==============================================================================
+GitHub PR 리뷰 (Octo)                                *nvim-git-workflow-octo*
+
+전제: `gh auth login`으로 인증된 gh CLI.
+
+PR 목록에서 리뷰할 PR 선택:
+>
+  <leader>gop
+<
+
+PR 버퍼 안에서:
+  - `<localleader>v`      리뷰 시작/제출 그룹
+  - `<localleader>c`      코멘트/코드 그룹
+  - `<localleader>p`      머지 그룹
+  - insert 모드에서 `@`, `#`로 사용자/이슈 자동완성
+
+그 외 진입점:
+>
+  <leader>goi   issue 목록
+  <leader>gos   GitHub 검색
+<
+
+참고:
+  - extra 기본 키(`<leader>gp` 등)는 gitsigns 키와 충돌해서
+    `<leader>go` 그룹으로 옮겨 두었다 (`lua/plugins/octo.lua`).
 
 ==============================================================================
 주의점                                               *nvim-git-workflow-notes*

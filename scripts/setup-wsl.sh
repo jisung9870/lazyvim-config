@@ -47,6 +47,7 @@ APT_PACKAGES=(
   fd-find
   fzf
   tmux
+  gh
   shellcheck
 )
 
