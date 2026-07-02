@@ -63,6 +63,7 @@ Explorer:
   y / p                파일 경로 yank / register의 파일 복사 붙여넣기
   d                    삭제
   H / I                hidden / ignored 파일 toggle
+  T                    파일 상세 정보(크기/수정 시각) toggle(Shift+t)
   <C-s> / <C-v>        Picker 기본 horizontal / vertical split 열기
 
 ==============================================================================
@@ -143,13 +144,21 @@ Octo (GitHub, gh CLI 인증 필요):
 PR/Issue 버퍼 안에서 <localleader> 그룹으로 코멘트/리뷰/머지
 
 GitLab (사내 self-hosted, GITLAB_TOKEN/GITLAB_URL 필요):
-<leader>gmm            MR 선택
+<leader>gmm            MR 목록에서 선택 (checkout + 리뷰 대상 지정)
 <leader>gmr            현재 브랜치 MR 리뷰 (diff)
 <leader>gms            MR summary
 <leader>gmp            파이프라인 보기
 <leader>gma            MR 승인
 <leader>gmA            승인 취소
 <leader>gmc            MR 생성
+
+GitLab 화면 닫기/조작:
+  <leader>gq            리뷰 diff 닫기 (Diffview 기반)
+  gld                   discussion 패널 토글
+  :q                    summary/pipeline 팝업 닫기
+  ZZ / ZQ               편집 팝업 제출 / 버리고 닫기
+  g?                    현재 화면 키맵 도움말
+  gl* 전역 키맵도 플러그인이 등록 (glc, gls, glA, glM 등)
 
 GitGraph 안에서:
   Enter                 커서의 commit을 Diffview로 열기
