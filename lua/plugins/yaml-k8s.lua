@@ -1,5 +1,5 @@
 -- ========================================
--- YAML Companion: Kubernetes 스키마 자동 감지
+-- Schema Companion: Kubernetes 스키마 자동 감지
 -- ========================================
 --
 -- 문제:
@@ -8,10 +8,12 @@
 --   파일마다 modeline 주석을 넣는 건 비실용적
 --
 -- 해결:
---   yaml-companion이 파일 내용(apiVersion, kind)을 읽어서
---   자동으로 올바른 Kubernetes 스키마를 적용
+--   schema-companion이 파일 내용(apiVersion, kind)을 읽어서
+--   자동으로 올바른 Kubernetes 스키마를 적용 (CRD 카탈로그 포함)
 --   extras.lang.yaml의 yamlls 설정 위에 LazyVim setup 훅으로 병합
---   (직접 lspconfig.setup()을 호출하면 extra 설정과 이중 setup됨)
+--
+-- 참고:
+--   유지보수가 중단된 yaml-companion.nvim의 활성 포크
 --
 -- 사용법:
 --   1. K8s YAML 파일 열기 → 자동으로 스키마 감지
@@ -25,16 +27,15 @@
 
 return {
   {
-    "someone-stole-my-name/yaml-companion.nvim",
+    "cenk1cenk2/schema-companion.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
     ft = { "yaml", "yaml.ansible", "yaml.ghaction" },
-    dependencies = {
-      "nvim-telescope/telescope.nvim",
-    },
+    opts = {},
     keys = {
       {
         "<leader>ys",
         function()
-          require("telescope").extensions.yaml_schema.yaml_schema()
+          require("schema-companion").select_schema()
         end,
         desc = "YAML: Select schema",
         ft = { "yaml", "yaml.ansible", "yaml.ghaction" },
@@ -43,7 +44,7 @@ return {
   },
 
   -- ==============================
-  -- yamlls를 yaml-companion 설정과 병합해서 setup
+  -- yamlls를 schema-companion 설정과 병합해서 setup
   -- ==============================
   {
     "neovim/nvim-lspconfig",
@@ -51,107 +52,87 @@ return {
       setup = {
         yamlls = function(_, opts)
           local k8s_schema_version = vim.g.k8s_schema_version or "v1.33.1"
+          local sc = require("schema-companion")
 
-          local cfg = require("yaml-companion").setup({
-            -- ==============================
-            -- 내장 스키마 매칭 (파일 내용 기반 자동 감지)
-            -- ==============================
-            builtin_matchers = {
-              kubernetes = { enabled = true },
-              cloud_init = { enabled = true },
-            },
-
-            -- ==============================
-            -- 자주 쓰는 스키마 목록 (수동 선택용)
-            -- ==============================
-            schemas = {
-              {
-                name = "Kubernetes " .. k8s_schema_version,
-                uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/"
-                  .. k8s_schema_version
-                  .. "-standalone-strict/all.json",
-              },
-              {
-                name = "Kustomization",
-                uri = "https://json.schemastore.org/kustomization.json",
-              },
-              {
-                name = "Helm Chart.yaml",
-                uri = "https://json.schemastore.org/chart.json",
-              },
-              {
-                name = "Helm values",
-                uri = "https://json.schemastore.org/helmfile.json",
-              },
-              {
-                name = "GitHub Actions Workflow",
-                uri = "https://json.schemastore.org/github-workflow.json",
-              },
-              {
-                name = "GitHub Actions Action",
-                uri = "https://json.schemastore.org/github-action.json",
-              },
-              {
-                name = "Docker Compose",
-                uri = "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json",
-              },
-            },
-
-            -- ==============================
-            -- yamlls 설정 (extras.lang.yaml 설정 위에 병합됨)
-            -- ==============================
-            lspconfig = {
-              filetypes = { "yaml", "yaml.ansible", "yaml.ghaction" },
-              settings = {
-                yaml = {
-                  validate = true,
-                  hover = true,
-                  completion = true,
-                  schemaStore = {
-                    enable = true, -- SchemaStore에서 자동으로 스키마 가져오기
-                    url = "https://www.schemastore.org/api/json/catalog.json",
+          -- extra의 yamlls opts에 커스텀 설정을 얹은 뒤 companion으로 감쌈
+          -- (LazyVim은 nvim 0.11+ 네이티브 vim.lsp.config API 사용)
+          local merged = vim.tbl_deep_extend("force", opts, {
+            filetypes = { "yaml", "yaml.ansible", "yaml.ghaction" },
+            settings = {
+              yaml = {
+                validate = true,
+                hover = true,
+                completion = true,
+                schemaStore = {
+                  enable = true, -- SchemaStore에서 자동으로 스키마 가져오기
+                  url = "https://www.schemastore.org/api/json/catalog.json",
+                },
+                schemas = {
+                  -- 파일 패턴 기반 스키마 매핑 (자동 감지 실패 시 폴백)
+                  ["https://json.schemastore.org/kustomization.json"] = {
+                    "kustomization.yaml",
+                    "kustomization.yml",
                   },
-                  schemas = {
-                    -- 파일 패턴 기반 스키마 매핑 (자동 감지 실패 시 폴백)
-                    ["https://json.schemastore.org/kustomization.json"] = {
-                      "kustomization.yaml",
-                      "kustomization.yml",
-                    },
-                    ["https://json.schemastore.org/chart.json"] = {
-                      "Chart.yaml",
-                      "Chart.yml",
-                    },
-                    ["https://json.schemastore.org/github-workflow.json"] = {
-                      ".github/workflows/*.yml",
-                      ".github/workflows/*.yaml",
-                    },
+                  ["https://json.schemastore.org/chart.json"] = {
+                    "Chart.yaml",
+                    "Chart.yml",
+                  },
+                  ["https://json.schemastore.org/github-workflow.json"] = {
+                    ".github/workflows/*.yml",
+                    ".github/workflows/*.yaml",
                   },
                 },
               },
             },
           })
 
-          -- extra의 yamlls opts 위에 yaml-companion 설정을 덮어씀
-          -- (LazyVim은 nvim 0.11+ 네이티브 vim.lsp.config API 사용)
-          local merged = vim.tbl_deep_extend("force", opts, cfg)
+          local cfg = sc.setup_client(
+            sc.adapters.yamlls.setup({
+              sources = {
+                -- K8s 내장/CRD 스키마 자동 감지
+                sc.sources.matchers.kubernetes.setup({ version = k8s_schema_version }),
+                -- yamlls(SchemaStore 등)가 이미 알고 있는 스키마
+                sc.sources.lsp.setup(),
+                -- 수동 선택용 자주 쓰는 스키마 목록
+                sc.sources.schemas.setup({
+                  {
+                    name = "Kubernetes " .. k8s_schema_version,
+                    uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/"
+                      .. k8s_schema_version
+                      .. "-standalone-strict/all.json",
+                  },
+                  {
+                    name = "Kustomization",
+                    uri = "https://json.schemastore.org/kustomization.json",
+                  },
+                  {
+                    name = "Helm Chart.yaml",
+                    uri = "https://json.schemastore.org/chart.json",
+                  },
+                  {
+                    name = "Helm values",
+                    uri = "https://json.schemastore.org/helmfile.json",
+                  },
+                  {
+                    name = "GitHub Actions Workflow",
+                    uri = "https://json.schemastore.org/github-workflow.json",
+                  },
+                  {
+                    name = "GitHub Actions Action",
+                    uri = "https://json.schemastore.org/github-action.json",
+                  },
+                  {
+                    name = "Docker Compose",
+                    uri = "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json",
+                  },
+                }),
+              },
+            }),
+            merged
+          )
 
-          -- yaml-companion이 nvim 0.11에서 제거된
-          -- client.workspace_did_change_configuration을 호출하므로 폴리필
-          local companion_on_attach = merged.on_attach
-          merged.on_attach = function(client, bufnr)
-            if not client.workspace_did_change_configuration then
-              client.workspace_did_change_configuration = function(settings)
-                return client:notify("workspace/didChangeConfiguration", { settings = settings })
-              end
-            end
-            if companion_on_attach then
-              companion_on_attach(client, bufnr)
-            end
-          end
-
-          vim.lsp.config("yamlls", merged)
+          vim.lsp.config("yamlls", cfg)
           vim.lsp.enable("yamlls")
-          require("telescope").load_extension("yaml_schema")
           return true -- LazyVim 기본 yamlls setup 건너뜀
         end,
       },
@@ -166,18 +147,15 @@ return {
     opts = function(_, opts)
       table.insert(opts.sections.lualine_x, 1, {
         function()
-          local schema = require("yaml-companion").get_buf_schema(0)
-          if schema and schema.result and schema.result[1] then
-            local name = schema.result[1].name
-            if name ~= "none" then
-              return "📋 " .. name
-            end
+          local name = require("schema-companion").get_current_schemas()
+          if name and name ~= "" and name ~= "none" then
+            return ("📋 " .. name):sub(1, 64)
           end
           return ""
         end,
         cond = function()
           return vim.tbl_contains({ "yaml", "yaml.ansible", "yaml.ghaction" }, vim.bo.filetype)
-            and package.loaded["yaml-companion"]
+            and package.loaded["schema-companion"] ~= nil
         end,
         color = { fg = "#89b4fa" },
       })
