@@ -92,8 +92,12 @@ vim.api.nvim_create_user_command("HelpDocs", open_help_docs, {
 
 map("n", "<leader>h?", open_help_docs, { desc = "Help docs" })
 
--- 현재 파일을 Typora로 열기 (md 파일일 때만)
+-- 현재 파일을 Typora로 열기 (md 파일일 때만, macOS 전용)
 map("n", "<leader>mt", function()
+  if vim.fn.has("mac") == 0 then
+    vim.notify("Typora keymap is macOS only", vim.log.levels.WARN)
+    return
+  end
   local file = vim.fn.expand("%:p")
   local ft = vim.bo.filetype
   if ft == "markdown" then

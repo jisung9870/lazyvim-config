@@ -225,7 +225,7 @@ CSV에서 <Tab>/<S-Tab>  다음/이전 field 끝으로 이동
 CSV에서 H/L            이전/다음 field 시작으로 이동
 CSV에서 J/K            같은 column 유지하며 다음/이전 row
 CSV에서 if / af        field text object
-<leader>mt             현재 Markdown 파일을 Typora로 열기
+<leader>mt             현재 Markdown 파일을 Typora로 열기 (macOS 전용)
 
 ==============================================================================
 외우는 순서                                           *lazyvim-cheatsheet-order*
