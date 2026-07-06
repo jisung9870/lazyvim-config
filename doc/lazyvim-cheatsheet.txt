@@ -205,13 +205,13 @@ gy                     type definition
 <leader>tf             floating terminal
 <leader>th             horizontal terminal
 <leader>tv             vertical terminal
-<leader>tp             tmux-sessionizer로 project session 전환/생성
+<leader>tp             bb tm으로 project session 전환/생성
 터미널에서 <Esc>       terminal mode 종료
 <leader>qq             Neovim 전체 종료
 
 tmux 사용 시:
   <C-h/j/k/l>           Neovim window와 tmux pane 사이를 같은 키로 이동
-  prefix f              tmux-sessionizer로 project session 전환/생성
+  prefix f              bb tm으로 project session 전환/생성
   prefix Tab            extrakto: 화면 텍스트를 fzf로 골라 복사/삽입
 
 ==============================================================================

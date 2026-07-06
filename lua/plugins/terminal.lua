@@ -55,7 +55,7 @@ return {
         function()
           local Terminal = require("toggleterm.terminal").Terminal
           Terminal:new({
-            cmd = "tmux-sessionizer",
+            cmd = "bb tm",
             direction = "float",
             close_on_exit = true,
             hidden = true,

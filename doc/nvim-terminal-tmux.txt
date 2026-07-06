@@ -107,7 +107,7 @@ Neovim project picker:
 <
 
 mental model:
-  - session을 새로 만들거나 바꿀 때는 `tmux-sessionizer`를 쓴다.
+  - session을 새로 만들거나 바꿀 때는 `bb tm`을 쓴다.
   - Neovim 안에서 파일/grep/explorer를 열 때는 `<leader>fp`를 쓴다.
   - 둘 다 `~/.config/tmux-sessionizer/dirs`를 기준으로 project 후보를 잡는다.
 
@@ -148,7 +148,7 @@ tmux 설정은 이 리포지토리에서 관리하고 홈에는 symlink만 둔�
   ~/.tmux.conf.local
 <
 
-agents CLI가 설치된 머신에서는 팝업 바인딩이 활성화된다:
+bb CLI가 설치된 머신에서는 `bb agents` 팝업 바인딩이 활성화된다:
 >
   prefix a
 <

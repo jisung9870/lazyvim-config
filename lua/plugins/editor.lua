@@ -10,6 +10,8 @@ local function tmux_sessionizer_dirs()
     for _, line in ipairs(vim.fn.readfile(config_file)) do
       line = vim.trim(line)
       if line ~= "" and not line:match("^#") then
+        -- binbox tm 포맷: '=' prefix는 직접 등록 항목 — 여기서도 dev 루트로 취급
+        line = (line:gsub("^=", ""))
         line = vim.fn.expand(line)
         if vim.fn.isdirectory(line) == 1 then
           table.insert(dirs, vim.fs.normalize(line))
