@@ -17,6 +17,7 @@ return {
         "hcl", -- Alloy/Terraform
         "dockerfile",
         "bash",
+        "groovy", -- Jenkinsfile
       })
     end,
   },

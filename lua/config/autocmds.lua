@@ -43,6 +43,19 @@ vim.filetype.add({
 })
 
 -- ========================================
+-- Jenkinsfile 감지
+-- ========================================
+-- `Jenkinsfile`은 Neovim 내장 감지로 groovy가 되지만,
+-- `Jenkinsfile.prod`, `deploy.Jenkinsfile` 같은 변형은 여기서 잡는다.
+
+vim.filetype.add({
+  pattern = {
+    [".*/[Jj]enkinsfile[^/]*"] = "groovy",
+    [".*%.[Jj]enkinsfile"] = "groovy",
+  },
+})
+
+-- ========================================
 -- YAML 계열 파일 자동 감지
 -- ========================================
 
