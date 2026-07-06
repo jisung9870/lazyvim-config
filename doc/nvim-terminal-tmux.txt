@@ -27,7 +27,7 @@ Terminal And Tmux Workflow                         *nvim-terminal-tmux-title*
 ==============================================================================
 Terminal mode                                      *nvim-terminal-tmux-mode*
 
-terminal mode에서 빠져나오기:
+ToggleTerm terminal mode에서 빠져나오기:
 >
   <Esc>
 <
@@ -36,6 +36,10 @@ terminal mode에서 빠져나오기:
   - ToggleTerm은 terminal을 insert 상태로 시작한다.
   - normal mode로 나온 뒤에는 일반 buffer처럼 검색과 복사가 가능하다.
   - 다시 입력하려면 `i`를 누른다.
+  - <Esc> terminal 종료 매핑은 ToggleTerm 버퍼에만 걸린다.
+    gitui(<leader>gg), Claude Code, bb tm 팝업 등 다른 터미널에서는
+    <Esc>가 앱으로 그대로 전달되므로, terminal mode를 나오려면
+    <C-\><C-n>을 사용한다.
 
 ==============================================================================
 tmux 이동                                           *nvim-terminal-tmux-nav*

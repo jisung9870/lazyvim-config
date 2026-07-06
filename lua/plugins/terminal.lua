@@ -30,6 +30,15 @@ return {
       direction = "float",
       close_on_exit = true,
       shell = vim.o.shell,
+      -- ESC는 이 toggleterm 버퍼에서만 terminal mode를 빠져나온다.
+      -- gitui, Claude Code, bb tm 팝업 같은 다른 터미널에는 영향 없음
+      -- (그쪽에서는 ESC가 앱으로 그대로 전달되어야 함)
+      on_open = function(term)
+        vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], {
+          buffer = term.bufnr,
+          desc = "Exit terminal mode",
+        })
+      end,
       float_opts = {
         border = "curved",
         -- 함수로 설정하여 창 크기 변경 시에도 올바른 비율 유지
@@ -59,14 +68,15 @@ return {
             direction = "float",
             close_on_exit = true,
             hidden = true,
+            -- 전역 on_open(ESC 매핑)을 덮어써서 ESC가 내부 fzf로 전달되게 함
+            on_open = function() end,
           }):toggle()
         end,
         desc = "Tmux project sessionizer",
       },
 
-      -- 터미널 모드에서 ESC로 나가기
-      { "<Esc>", [[<C-\><C-n>]], mode = "t", desc = "Exit terminal mode" },
-
+      -- 참고: ESC로 terminal mode 종료는 위 on_open에서 버퍼 로컬로 설정
+      -- (전역 매핑은 gitui/Claude Code 등 다른 터미널을 방해하므로 제거)
       -- 참고: Ctrl+h/j/k/l 창 이동은 tmux-navigator가 처리
       -- toggleterm에서 별도 매핑 불필요 (충돌 방지)
     },

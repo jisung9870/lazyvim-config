@@ -98,7 +98,6 @@ H / L                  이전/다음 버퍼
 <A-j> / <A-k>          줄 또는 선택 영역 위/아래 이동
 < / >                  Visual 선택 들여쓰기, 선택 유지
 J                      줄 합치기, 커서 위치 유지
-<leader>a              전체 선택
 gco / gcO              아래/위에 주석 라인 추가
 gcc                    현재 줄 주석 toggle
 gc                     Visual 선택 주석 toggle
@@ -206,7 +205,7 @@ gy                     type definition
 <leader>th             horizontal terminal
 <leader>tv             vertical terminal
 <leader>tp             bb tm으로 project session 전환/생성
-터미널에서 <Esc>       terminal mode 종료
+ToggleTerm에서 <Esc>   terminal mode 종료 (ToggleTerm 버퍼 한정)
 <leader>qq             Neovim 전체 종료
 
 tmux 사용 시:
