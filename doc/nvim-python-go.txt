@@ -42,7 +42,7 @@ Go 기본 흐름                                         *nvim-python-go-go*
   - `goimports`
   - `gofumpt`
   - `delve`
-  - `neotest-go`
+  - `neotest-golang`
 
 수동 포맷:
 >
@@ -65,7 +65,7 @@ LSP 확인:
 Go 테스트와 디버그                                  *nvim-python-go-test*
 
 테스트:
-  - LazyVim test extra와 `neotest-go`를 사용한다.
+  - LazyVim test extra와 `neotest-golang`을 사용한다.
   - 테스트 키는 which-key에서 `<leader>t` 또는 test group을 확인한다.
 
 디버그:

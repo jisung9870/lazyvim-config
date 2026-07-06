@@ -1,5 +1,5 @@
 -- ========================================
--- UI 플러그인 통합: 상태바 + 들여쓰기 가이드 + 코드 아웃라인
+-- UI 플러그인 통합: 상태바 + 코드 아웃라인 + 파일 탐색기
 -- ========================================
 
 return {
@@ -87,59 +87,10 @@ return {
   },
 
   -- ==============================
-  -- 2. Indent Blankline (들여쓰기 가이드)
+  -- 2. Aerial (코드 심볼 아웃라인)
   -- ==============================
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = "LazyFile",
-    main = "ibl",
-    opts = {
-      indent = {
-        char = "│",
-        tab_char = "│",
-      },
-      whitespace = {
-        remove_blankline_trail = true,
-      },
-      scope = {
-        enabled = true,
-        char = "│",
-        show_start = true,
-        show_end = false,
-        show_exact_scope = true,
-        injected_languages = true,
-      },
-      exclude = {
-        filetypes = {
-          "help",
-          "alpha",
-          "dashboard",
-          "neo-tree",
-          "Trouble",
-          "trouble",
-          "lazy",
-          "mason",
-          "notify",
-          "toggleterm",
-          "lazyterm",
-          "NvimTree",
-        },
-        buftypes = { "terminal", "nofile" },
-      },
-    },
-    config = function(_, opts)
-      local hooks = require("ibl.hooks")
-      hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-        vim.api.nvim_set_hl(0, "IblIndent", { fg = "#313244", nocombine = true })
-        vim.api.nvim_set_hl(0, "IblScope", { fg = "#585b70", nocombine = true })
-      end)
-      require("ibl").setup(opts)
-    end,
-  },
-
-  -- ==============================
-  -- 3. Aerial (코드 심볼 아웃라인)
-  -- ==============================
+  -- 들여쓰기 가이드는 LazyVim 기본 snacks indent 사용
+  -- (색상은 colorscheme.lua의 SnacksIndent/SnacksIndentScope에서 조정)
   {
     "stevearc/aerial.nvim",
     opts = {
@@ -153,7 +104,7 @@ return {
   },
 
   -- ==============================
-  -- 4. Snacks Explorer
+  -- 3. Snacks Explorer
   -- ==============================
   {
     "folke/snacks.nvim",

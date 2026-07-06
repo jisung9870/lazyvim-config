@@ -88,9 +88,9 @@ return {
           TelescopeBorder = { fg = "#89b4fa" },
           TelescopePromptBorder = { fg = "#f5c2e7" },
 
-          -- 들여쓰기 가이드
-          IndentBlanklineChar = { fg = "#313244" },
-          IndentBlanklineContextChar = { fg = "#585b70" },
+          -- 들여쓰기 가이드 (LazyVim 기본 snacks indent)
+          SnacksIndent = { fg = "#313244" },
+          SnacksIndentScope = { fg = "#585b70" },
 
           -- DevOps 파일 타입별 강조
           yamlBlockMappingKey = { fg = "#89b4fa", style = { "bold" } },
@@ -106,7 +106,6 @@ return {
         diffview = true,
         flash = true,
         gitsigns = true,
-        indent_blankline = { enabled = true, scope_color = "lavender" },
         mason = true,
         markdown = true,
         mini = { enabled = true, indentscope_color = "" },

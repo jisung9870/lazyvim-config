@@ -3,55 +3,31 @@
 -- 기본 도구는 lazy.lua의 extras.lang.go가 자동 설치:
 --   gopls, gofumpt, goimports, gomodifytags, impl, delve
 -- ========================================
+--
+-- 참고: gopls의 gofumpt/staticcheck/codelenses/hints/analyses와
+-- inlay_hints, neotest(neotest-golang), nvim-dap-go는 모두
+-- extras.lang.go가 이미 기본 제공하므로 여기서 재정의하지 않는다.
+-- (제거된 fieldalignment analyzer 등 중복/무효 설정 정리)
 
 return {
   -- ==============================
-  -- 1. gopls 상세 설정 오버라이드
+  -- 1. gopls: repo 고유 디렉터리 필터만 오버라이드
   -- ==============================
+  -- extra 기본 directoryFilters에 .trash를 추가 (그 외는 extra 기본값 유지)
   {
     "neovim/nvim-lspconfig",
     opts = {
-      inlay_hints = { enabled = true },
       servers = {
         gopls = {
           settings = {
             gopls = {
-              gofumpt = true,
-              usePlaceholders = true,
-              completeUnimported = true,
-              staticcheck = true,
-              directoryFilters = { "-.git", "-.vscode", "-.idea", "-node_modules", "-.trash" },
-
-              -- 코드 렌즈
-              codelenses = {
-                gc_details = false,
-                generate = true,
-                regenerate_cgo = true,
-                run_govulncheck = true,
-                test = true,
-                tidy = true,
-                upgrade_dependency = true,
-                vendor = true,
-              },
-
-              -- 인레이 힌트
-              hints = {
-                assignVariableTypes = true,
-                compositeLiteralFields = true,
-                compositeLiteralTypes = true,
-                constantValues = true,
-                functionTypeParameters = true,
-                parameterNames = true,
-                rangeVariableTypes = true,
-              },
-
-              -- 정적 분석
-              analyses = {
-                fieldalignment = true,
-                nilness = true,
-                unusedparams = true,
-                unusedwrite = true,
-                useany = true,
+              directoryFilters = {
+                "-.git",
+                "-.vscode",
+                "-.vscode-test",
+                "-.idea",
+                "-node_modules",
+                "-.trash",
               },
             },
           },
@@ -61,36 +37,8 @@ return {
   },
 
   -- ==============================
-  -- 2. Neotest 커스터마이징
+  -- 2. parameter swap 텍스트 객체
   -- ==============================
-  {
-    "nvim-neotest/neotest",
-    optional = true,
-    dependencies = {
-      "nvim-neotest/neotest-go",
-    },
-    opts = {
-      adapters = {
-        ["neotest-go"] = {
-          args = { "-v" },
-          recursive_run = true,
-          experimental = {
-            test_table = true,
-          },
-        },
-      },
-    },
-  },
-
-  -- ==============================
-  -- 3. DAP (delve) — extras가 기본 설정 제공
-  -- 커스텀 설정이 필요할 때만 아래 opts 수정
-  -- ==============================
-  {
-    "leoluz/nvim-dap-go",
-    opts = {},
-  },
-
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
     opts = {

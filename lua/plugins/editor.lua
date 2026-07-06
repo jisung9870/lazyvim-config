@@ -115,6 +115,23 @@ return {
       opts.picker.sources = opts.picker.sources or {}
       opts.picker.sources.projects = opts.picker.sources.projects or {}
       opts.picker.sources.projects.dev = tmux_sessionizer_dirs()
+
+      -- DevOps 작업 시 불필요한 디렉터리를 파일/grep picker에서 제외
+      -- (기본 picker가 snacks이므로 telescope file_ignore_patterns 대신 여기서 처리)
+      -- fd는 -E, rg는 -g '!<pat>' 로 변환됨
+      local devops_exclude = {
+        "node_modules",
+        ".terraform",
+        ".terragrunt-cache",
+        "vendor",
+        "__pycache__",
+        "*.pyc",
+      }
+      for _, source in ipairs({ "files", "grep" }) do
+        opts.picker.sources[source] = opts.picker.sources[source] or {}
+        opts.picker.sources[source].exclude = vim.list_extend(opts.picker.sources[source].exclude or {}, devops_exclude)
+      end
+
       return opts
     end,
     keys = {

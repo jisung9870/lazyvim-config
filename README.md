@@ -14,7 +14,7 @@ lua/
 │   └── local.lua       # 머신별 설정 (git 미추적)
 ├── plugins/
 │   ├── colorscheme.lua # Catppuccin Mocha
-│   ├── editor.lua      # 한/영 전환 (macOS), Telescope
+│   ├── editor.lua      # 한/영 전환 (macOS), Telescope, Snacks picker 제외
 │   ├── formatting.lua  # conform.nvim 포맷터 설정
 │   ├── git.lua         # Diffview + Gitsigns
 │   ├── gitlab.lua      # gitlab.nvim (사내 GitLab MR 리뷰)
@@ -24,7 +24,7 @@ lua/
 │   ├── lang-go.lua     # Go 개발 환경 (gopls, neotest, DAP)
 │   ├── linting.lua     # nvim-lint DevOps 린터 설정
 │   ├── terminal.lua    # ToggleTerm + tmux 연동
-│   ├── ui.lua          # Lualine, Indent Blankline, Aerial
+│   ├── ui.lua          # Lualine, Aerial, Snacks Explorer
 │   └── yaml-k8s.lua    # Schema Companion (K8s 스키마 자동 감지)
 ```
 
