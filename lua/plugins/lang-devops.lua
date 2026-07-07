@@ -2,6 +2,9 @@
 -- DevOps 언어 지원 통합
 -- extras로 처리되는 것: YAML, JSON, Terraform, Ansible, Go
 -- 여기서는 extras가 없는 도구만 직접 설정
+--   - Nginx / Grafana Alloy 구문 + 포맷
+--   - Ansible LSP 오버라이드
+--   - Shell (bashls LSP + shellcheck 진단)
 -- ========================================
 
 return {
@@ -57,6 +60,13 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        -- Shell: bash-language-server
+        -- shellcheck가 PATH에 있으면 진단을 자동 연동한다
+        -- (그래서 nvim-lint에 shellcheck를 따로 넣지 않음 — 중복 진단 방지)
+        -- 포맷(shfmt)은 formatting.lua의 sh/bash에서 처리
+        bashls = {
+          filetypes = { "sh", "bash" },
+        },
         ansiblels = {
           filetypes = { "yaml.ansible", "ansible" },
           settings = {
@@ -79,5 +89,19 @@ return {
         },
       },
     },
+  },
+
+  -- ==============================
+  -- 4. Shell 도구 설치 (bashls + shellcheck)
+  -- ==============================
+  {
+    "mason-org/mason.nvim",
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, {
+        "bash-language-server",
+        "shellcheck",
+      })
+    end,
   },
 }

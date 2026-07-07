@@ -15,6 +15,7 @@ nvim-devops-workflow-alloy	nvim-devops-workflow.txt	/*nvim-devops-workflow-alloy
 nvim-devops-workflow-ansible	nvim-devops-workflow.txt	/*nvim-devops-workflow-ansible*
 nvim-devops-workflow-ci	nvim-devops-workflow.txt	/*nvim-devops-workflow-ci*
 nvim-devops-workflow-order	nvim-devops-workflow.txt	/*nvim-devops-workflow-order*
+nvim-devops-workflow-shell	nvim-devops-workflow.txt	/*nvim-devops-workflow-shell*
 nvim-devops-workflow-tf	nvim-devops-workflow.txt	/*nvim-devops-workflow-tf*
 nvim-devops-workflow-title	nvim-devops-workflow.txt	/*nvim-devops-workflow-title*
 nvim-devops-workflow-tools	nvim-devops-workflow.txt	/*nvim-devops-workflow-tools*

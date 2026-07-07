@@ -160,6 +160,21 @@ Alloy:
 <
 
 ==============================================================================
+Shell 스크립트                                       *nvim-devops-workflow-shell*
+
+셸 스크립트(sh/bash)는 bash-language-server(bashls)가 담당한다.
+  - shellcheck가 PATH에 있으면 bashls가 진단을 자동으로 붙인다.
+    (예: SC2086 따옴표 누락, SC2154 미선언 변수 등)
+  - 포맷은 shfmt(들여쓰기 2칸, case indent)를 쓴다: `<leader>cf`
+  - bashls/shellcheck는 Mason이 설치한다.
+
+확인:
+>
+  :LspInfo        bashls attached 여부
+  :Mason          bash-language-server / shellcheck 설치 상태
+<
+
+==============================================================================
 필요 도구                                            *nvim-devops-workflow-tools*
 
 자주 필요한 외부 도구:
@@ -171,6 +186,8 @@ Alloy:
   - `terraform`
   - `ansible-lint`
   - `alloy`
+  - `bash-language-server` (Mason)
+  - `shellcheck` (Mason)
 
 설치 상태는 `:Mason`, `:checkhealth`, 각 CLI의 `--version`으로 확인한다.
 

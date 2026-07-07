@@ -20,7 +20,7 @@ lua/
 │   ├── gitlab.lua      # gitlab.nvim (사내 GitLab MR 리뷰)
 │   ├── kubectl.lua     # kubectl.nvim (클러스터 뷰/로그/exec)
 │   ├── octo.lua        # Octo 키맵 조정 (extras.util.octo)
-│   ├── lang-devops.lua # Nginx, Alloy, Ansible LSP
+│   ├── lang-devops.lua # Nginx, Alloy, Ansible LSP, Shell(bashls/shellcheck)
 │   ├── lang-go.lua     # Go 개발 환경 (gopls, neotest, DAP)
 │   ├── linting.lua     # nvim-lint DevOps 린터 설정
 │   ├── terminal.lua    # ToggleTerm + tmux 연동
@@ -179,4 +179,6 @@ shell lint(shellcheck/shfmt), `stylua --check lua/`, help tag 빌드와 `doc/tag
 | hadolint | Mason 또는 `brew install hadolint` | GitHub release | Dockerfile 린트 |
 | prettier | `npm i -g prettier` | 동일 | YAML/JSON 포맷 |
 | shfmt | `brew install shfmt` | `apt install shfmt` | Shell 포맷 |
+| bash-language-server | Mason 자동 | 동일 | Shell LSP (bashls) |
+| shellcheck | Mason 또는 `brew install shellcheck` | `apt install shellcheck` | Shell 진단 (bashls 연동) |
 | stylua | `brew install stylua` | cargo/GitHub release | Lua 포맷 |
