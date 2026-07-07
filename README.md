@@ -17,7 +17,7 @@ lua/
 │   ├── editor.lua      # 한/영 전환 (macOS), Telescope, Snacks picker 제외
 │   ├── folding.lua     # nvim-ufo 폴딩 (treesitter/indent)
 │   ├── formatting.lua  # conform.nvim 포맷터 설정
-│   ├── git.lua         # Diffview + Gitsigns
+│   ├── git.lua         # Diffview + Gitsigns + git-conflict
 │   ├── gitlab.lua      # gitlab.nvim (사내 GitLab MR 리뷰)
 │   ├── kubectl.lua     # kubectl.nvim (클러스터 뷰/로그/exec)
 │   ├── octo.lua        # Octo 키맵 조정 (extras.util.octo)

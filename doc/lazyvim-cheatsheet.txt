@@ -139,6 +139,14 @@ Git                                                     *lazyvim-cheatsheet-git*
 ]h / [h                다음/이전 hunk
 ]H / [H                마지막/첫 hunk
 
+Merge 충돌 (git-conflict, 충돌 마커가 있는 버퍼에서):
+]x / [x                다음/이전 충돌로 이동
+<leader>gxo            ours 선택 (현재 브랜치 쪽)
+<leader>gxt            theirs 선택 (병합해 오는 쪽)
+<leader>gxb            both 선택 (양쪽 모두)
+<leader>gx0            none 선택 (양쪽 모두 버림)
+<leader>gxl            충돌 목록을 quickfix로
+
 Octo (GitHub, gh CLI 인증 필요):
 <leader>gop            PR 목록
 <leader>goP            PR 검색

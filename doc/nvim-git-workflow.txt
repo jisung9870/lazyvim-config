@@ -18,6 +18,7 @@ Gitsigns                현재 buffer의 hunk 단위 stage/reset/blame
 Snacks git picker       빠른 log, file history, browse
 Octo                    GitHub PR/issue 리뷰와 코멘트 (gh CLI 필요)
 gitlab.nvim             사내 GitLab MR 리뷰/승인 (GITLAB_TOKEN 필요)
+git-conflict            버퍼 내 merge/rebase 충돌 인라인 해결
 
 기본 판단:
   - Git 작업을 실행하려면 GitUI
@@ -152,6 +153,30 @@ resolve를 처리한다 (:h gitlab.nvim 참고).
   - 백엔드는 Go로 빌드된다 (plugin 설치 시 자동, Go >= 1.25 필요).
   - 프로젝트별 설정이 필요하면 프로젝트 루트 `.gitlab.nvim` 파일을
     쓰되 전역 gitignore에 추가한다.
+
+==============================================================================
+Merge 충돌 해결 (git-conflict)                      *nvim-git-workflow-conflict*
+
+merge/rebase로 충돌이 생긴 파일을 열면 git-conflict가 충돌 블록을
+자동으로 하이라이트한다. 마커(<<<<<<< / ======= / >>>>>>>) 위에서:
+>
+  ]x / [x        다음/이전 충돌로 이동
+  <leader>gxo    ours 선택 (현재 브랜치)
+  <leader>gxt    theirs 선택 (병합해 오는 쪽)
+  <leader>gxb    both 선택 (양쪽 모두 유지)
+  <leader>gx0    none 선택 (양쪽 모두 버림)
+  <leader>gxl    남은 충돌을 quickfix 목록으로
+<
+흐름:
+  1. GitUI(<leader>gg) 또는 터미널에서 merge/rebase 실행 → 충돌 발생
+  2. 충돌 파일을 열면 블록이 하이라이트됨
+  3. ]x로 이동하며 각 블록에서 ours/theirs/both를 고른다
+  4. 해결 후 GitUI에서 stage → commit / rebase continue
+
+기본 매핑(co/ct/cb/c0)은 vim의 change 연산자(ct=change-till 등)를
+가리므로 이 config에서는 꺼두고 위 커스텀 키를 쓴다.
+
+복잡한 3-way 충돌은 Diffview의 merge tool(diff3)로 보는 편이 낫다.
 
 ==============================================================================
 주의점                                               *nvim-git-workflow-notes*

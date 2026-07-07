@@ -95,4 +95,40 @@ return {
       { "<leader>gu", "<cmd>Gitsigns undo_stage_hunk<cr>", desc = "Undo stage hunk" },
     },
   },
+
+  -- ==============================
+  -- 3. git-conflict (인라인 merge 충돌 해결)
+  -- ==============================
+  -- diffview merge tool과 별개로, 충돌 마커가 있는 버퍼에서
+  -- 직접 ours/theirs/both/none을 고른다.
+  -- 기본 매핑(co/ct/cb/c0)은 vim change 연산자(ct=change-till 등)를
+  -- 가리므로 끄고, 안전한 커스텀 키를 쓴다.
+  {
+    "akinsho/git-conflict.nvim",
+    version = "*",
+    event = "LazyFile", -- 충돌 마커 자동 하이라이트를 위해 파일 열 때 로드
+    opts = {
+      default_mappings = false,
+      disable_diagnostics = false,
+    },
+    keys = {
+      { "]x", "<cmd>GitConflictNextConflict<cr>", desc = "Next conflict" },
+      { "[x", "<cmd>GitConflictPrevConflict<cr>", desc = "Prev conflict" },
+      { "<leader>gxo", "<cmd>GitConflictChooseOurs<cr>", desc = "Conflict: choose ours" },
+      { "<leader>gxt", "<cmd>GitConflictChooseTheirs<cr>", desc = "Conflict: choose theirs" },
+      { "<leader>gxb", "<cmd>GitConflictChooseBoth<cr>", desc = "Conflict: choose both" },
+      { "<leader>gx0", "<cmd>GitConflictChooseNone<cr>", desc = "Conflict: choose none" },
+      { "<leader>gxl", "<cmd>GitConflictListQf<cr>", desc = "Conflict: list in quickfix" },
+    },
+  },
+
+  -- which-key 그룹 이름
+  {
+    "folke/which-key.nvim",
+    opts = {
+      spec = {
+        { "<leader>gx", group = "conflict" },
+      },
+    },
+  },
 }
