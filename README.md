@@ -15,6 +15,7 @@ lua/
 ├── plugins/
 │   ├── colorscheme.lua # Catppuccin Mocha
 │   ├── editor.lua      # 한/영 전환 (macOS), Telescope, Snacks picker 제외
+│   ├── folding.lua     # nvim-ufo 폴딩 (treesitter/indent)
 │   ├── formatting.lua  # conform.nvim 포맷터 설정
 │   ├── git.lua         # Diffview + Gitsigns
 │   ├── gitlab.lua      # gitlab.nvim (사내 GitLab MR 리뷰)

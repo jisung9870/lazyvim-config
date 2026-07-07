@@ -107,6 +107,12 @@ v 모드 p               붙여넣기 시 기존 register 유지
 <leader>cx             다음 parameter와 swap
 <leader>cX             이전 parameter와 swap
 
+폴딩 (nvim-ufo):
+za                     커서 위치 fold toggle
+zR                     모든 fold 열기
+zM                     모든 fold 닫기
+zK                     접힌 내용 미리보기 (fold 없으면 hover)
+
 ==============================================================================
 Git                                                     *lazyvim-cheatsheet-git*
 
