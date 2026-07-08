@@ -158,6 +158,31 @@ bb CLI가 설치된 머신에서는 `bb agents` 팝업 바인딩이 활성화된
 <
 
 ==============================================================================
+상태바 리소스 모니터링                            *nvim-terminal-tmux-status*
+
+tmux status-right에는 Catppuccin module로 directory, CPU, battery, session,
+user 정보가 표시된다. CPU와 battery는 각각 TPM plugin `tmux-cpu`,
+`tmux-battery`를 사용한다.
+
+새 tmux server를 시작할 때도 resource monitor가 자동으로 보이도록
+Catppuccin status module을 status-right 조립 전에 먼저 source한다. 따라서
+정상 상태에서는 `prefix r`을 눌러 수동 reload하지 않아도 된다.
+
+resource monitor가 비어 있으면:
+  - tmux plugin이 설치되어 있는지 확인한다.
+>
+  ls ~/.tmux/plugins/tmux ~/.tmux/plugins/tmux-cpu ~/.tmux/plugins/tmux-battery
+<
+  - plugin이 없으면 setup flow로 설치한다.
+>
+  ./scripts/setup.sh --install --with-tmux-plugins
+<
+  - 이미 실행 중인 tmux server에 설정 변경만 반영하려면 reload한다.
+>
+  prefix r
+<
+
+==============================================================================
 반복 명령                                            *nvim-terminal-tmux-task*
 
 반복해서 실행하는 명령은 terminal에 직접 치기보다 Overseer task로 실행한다.
