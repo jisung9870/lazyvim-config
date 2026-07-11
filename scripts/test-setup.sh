@@ -22,6 +22,7 @@ FILES=(
   scripts/setup.sh
   scripts/setup-macos.sh
   scripts/setup-wsl.sh
+  scripts/doctor.sh
   scripts/lib/setup-common.sh
   scripts/lib/setup-versions.sh
   scripts/test-setup.sh
@@ -57,6 +58,9 @@ ok "통합 setup help 출력 통과"
 
 ./scripts/setup-macos.sh --help >/dev/null
 ok "macOS help 출력 통과"
+
+./scripts/doctor.sh --help >/dev/null
+ok "doctor help 출력 통과"
 
 ./scripts/setup.sh --type macos --help >/dev/null
 ok "통합 setup macOS help 위임 통과"

@@ -147,8 +147,13 @@ Neovim AppImage 버전은 `scripts/lib/setup-versions.sh`의 `NVIM_VERSION`에�
 ### 검증
 
 ```bash
+./scripts/doctor.sh
 ./scripts/test-setup.sh
 ```
+
+`scripts/doctor.sh`는 설치 command, `.tool-versions` runtime, `~/.config/nvim`
+배포 link, `lazy-lock.json`, headless startup을 진단합니다. 필수 dependency 누락 시
+non-zero로 종료하며, 선택 integration까지 필수로 검사하려면 `--strict`를 사용합니다.
 
 `scripts/test-setup.sh`는 bash 문법, ShellCheck, shfmt, help 출력, dry-run, symlink helper 단위 테스트, `nvim --headless '+qa'`를 확인합니다. 로컬에 `shellcheck`, `shfmt`, `nvim`이 없으면 해당 항목은 경고 후 건너뜁니다.
 
