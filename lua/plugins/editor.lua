@@ -111,7 +111,7 @@ return {
       {
         "<leader>fp",
         function()
-          Snacks.picker.projects({ dev = tmux_sessionizer_dirs() })
+          require("workbench.projects").pick()
         end,
         desc = "Projects",
       },
