@@ -12,6 +12,7 @@ lua/
 │   ├── keymaps.lua     # 커스텀 키맵
 │   ├── autocmds.lua    # 파일 타입 감지 (Alloy, Nginx, Ansible)
 │   └── local.lua       # 머신별 설정 (git 미추적)
+├── workbench/          # wb JSON client와 Project/Agent/Worktree/Doctor picker
 ├── plugins/
 │   ├── colorscheme.lua # Catppuccin Mocha
 │   ├── editor.lua      # 한/영 전환 (macOS), Telescope, Snacks picker 제외
@@ -57,6 +58,7 @@ symlink라서 pull 후 내용이 바로 반영되며, 실행 중인 서버에는
 - `:help nvim-devops-workflow`: YAML, Terraform, Ansible 등 DevOps 작업 흐름
 - `:help nvim-python-go`: Python/Go 개발 흐름
 - `:help nvim-terminal-tmux`: 터미널/tmux 연동과 tmux 설정 관리
+- `:help nvim-workbench`: Workbench picker, 비동기/fallback, 안전한 action
 - `:help nvim-troubleshooting`: 문제 해결 순서
 
 문서 목록은 Neovim 안에서 `:HelpDocs` 또는 `<leader>h?`로 열 수 있습니다.

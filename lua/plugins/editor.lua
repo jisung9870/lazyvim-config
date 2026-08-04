@@ -83,6 +83,9 @@ return {
   -- ==============================
   {
     "folke/snacks.nvim",
+    init = function()
+      require("workbench").setup()
+    end,
     opts = function(_, opts)
       opts.picker = opts.picker or {}
       opts.picker.sources = opts.picker.sources or {}

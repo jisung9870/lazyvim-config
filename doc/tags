@@ -66,3 +66,8 @@ nvim-troubleshooting-order	nvim-troubleshooting.txt	/*nvim-troubleshooting-order
 nvim-troubleshooting-os	nvim-troubleshooting.txt	/*nvim-troubleshooting-os*
 nvim-troubleshooting-plugin	nvim-troubleshooting.txt	/*nvim-troubleshooting-plugin*
 nvim-troubleshooting-title	nvim-troubleshooting.txt	/*nvim-troubleshooting-title*
+nvim-workbench	nvim-workbench.txt	/*nvim-workbench*
+nvim-workbench-commands	nvim-workbench.txt	/*nvim-workbench-commands*
+nvim-workbench-fallback	nvim-workbench.txt	/*nvim-workbench-fallback*
+nvim-workbench-security	nvim-workbench.txt	/*nvim-workbench-security*
+nvim-workbench-title	nvim-workbench.txt	/*nvim-workbench-title*
