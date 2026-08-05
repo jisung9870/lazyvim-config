@@ -134,7 +134,7 @@ vim.g.clipboard = {
 Go/Node.js/Python은 asdf로 관리하며, repo 루트의 `.tool-versions`를 기준으로 설치합니다.
 
 ```bash
-golang 1.25.11
+golang 1.25.12
 nodejs 24.15.0
 python 3.13.1
 ```
