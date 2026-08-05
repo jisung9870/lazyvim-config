@@ -66,5 +66,8 @@ jobs:
           nvim --headless -u NONE --cmd "set rtp+=." "+helptags doc" "+h lazyvim-cheatsheet" +qa
           git diff --exit-code doc/tags
 
+      - name: Workbench client smoke
+        run: nvim --headless -u NONE -l scripts/workbench-client-smoke.lua
+
       - name: test-setup.sh
         run: ./scripts/test-setup.sh

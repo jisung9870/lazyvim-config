@@ -3,34 +3,7 @@
 -- ========================================
 
 local function tmux_sessionizer_dirs()
-  local config_home = vim.env.XDG_CONFIG_HOME or vim.fn.expand("~/.config")
-  local config_file = config_home .. "/tmux-sessionizer/dirs"
-  local dirs = {}
-  if vim.fn.filereadable(config_file) == 1 then
-    for _, line in ipairs(vim.fn.readfile(config_file)) do
-      line = vim.trim(line)
-      if line ~= "" and not line:match("^#") then
-        -- binbox tm 포맷: '=' prefix는 직접 등록 항목 — 여기서도 dev 루트로 취급
-        line = (line:gsub("^=", ""))
-        line = vim.fn.expand(line)
-        if vim.fn.isdirectory(line) == 1 then
-          table.insert(dirs, vim.fs.normalize(line))
-        end
-      end
-    end
-  end
-
-  -- dirs 파일이 없으면 관례적 위치로 폴백 (존재하는 디렉토리만)
-  if #dirs == 0 then
-    for _, fallback in ipairs({ "~/home/projects", "~/home/work" }) do
-      fallback = vim.fn.expand(fallback)
-      if vim.fn.isdirectory(fallback) == 1 then
-        table.insert(dirs, vim.fs.normalize(fallback))
-      end
-    end
-  end
-
-  return dirs
+  return require("config.sessionizer").dev_roots()
 end
 
 return {
@@ -110,6 +83,9 @@ return {
   -- ==============================
   {
     "folke/snacks.nvim",
+    init = function()
+      require("workbench").setup()
+    end,
     opts = function(_, opts)
       opts.picker = opts.picker or {}
       opts.picker.sources = opts.picker.sources or {}
@@ -138,7 +114,7 @@ return {
       {
         "<leader>fp",
         function()
-          Snacks.picker.projects({ dev = tmux_sessionizer_dirs() })
+          require("workbench.projects").pick()
         end,
         desc = "Projects",
       },
