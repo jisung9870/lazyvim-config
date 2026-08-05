@@ -1,5 +1,9 @@
 local M = {}
 
+local function observe(source)
+  require("workbench.compatibility").observe("nvim", "projects", source)
+end
+
 local function project_paths(data)
   local projects = data and data.projects
   if type(projects) ~= "table" then
@@ -18,6 +22,7 @@ end
 local function legacy_picker(reason)
   require("workbench.binbox").projects(function(paths, binbox_err)
     if paths then
+      observe("binbox")
       Snacks.notify.warn(("wb unavailable; using binbox project API: %s"):format(reason))
       Snacks.picker.projects({ projects = paths, dev = {}, recent = false })
       return
@@ -25,6 +30,7 @@ local function legacy_picker(reason)
     Snacks.notify.warn(
       ("Workbench APIs unavailable; using sessionizer fallback: %s; %s"):format(reason, binbox_err or "binbox failed")
     )
+    observe("sessionizer")
     Snacks.picker.projects({ dev = require("config.sessionizer").dev_roots() })
   end)
 end
@@ -46,6 +52,7 @@ function M.pick()
       legacy_picker(err or "unknown error")
       return
     end
+    observe("workbench")
     Snacks.picker.projects({ projects = paths, dev = {}, recent = false })
   end)
 end

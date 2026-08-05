@@ -24,13 +24,19 @@ end
 local temp_dir = vim.fn.tempname()
 vim.fn.mkdir(temp_dir, "p")
 local executable = temp_dir .. "/wb"
+local observation_file = temp_dir .. "/observation.args"
 vim.fn.writefile({
   "#!/bin/sh",
+  [[if [ "$1" = compatibility ]; then]],
+  [[  printf '%s\n' "$@" > "$WB_OBSERVATION_FILE"]],
+  [[  exit 9]],
+  [[fi]],
   [[printf '%s\n' '{"schema_version":1,"ok":true,"data":{"projects":[{"id":"alpha","name":"alpha","path":"/tmp/alpha"}]},"warnings":[],"error":null}']],
 }, executable)
 vim.fn.setfperm(executable, "rwx------")
 local original_path = vim.env.PATH
 vim.env.PATH = temp_dir .. ":" .. original_path
+vim.env.WB_OBSERVATION_FILE = observation_file
 local completed = false
 client.request({ "projects", "list", "--json" }, function(result, _, err)
   if err or not result or result.projects[1].id ~= "alpha" then
@@ -43,18 +49,41 @@ if not vim.wait(2000, function()
 end, 20) then
   error("async Workbench callback timed out")
 end
+require("workbench.compatibility").observe("nvim", "projects", "workbench")
+if not vim.wait(2000, function()
+  return vim.uv.fs_stat(observation_file) ~= nil
+end, 20) then
+  error("compatibility observation timed out")
+end
+local observation_args = vim.fn.readfile(observation_file)
+if
+  table.concat(observation_args, " ") ~= "compatibility observe --client nvim --feature projects --source workbench"
+then
+  error("compatibility observation arguments changed")
+end
 vim.env.PATH = original_path
+vim.env.WB_OBSERVATION_FILE = nil
 vim.fn.delete(temp_dir, "rf")
 
 local selected
 local warning
+local observed = {}
 Snacks = {
-  notify = { warn = function(message)
-    warning = message
-  end },
-  picker = { projects = function(opts)
-    selected = opts
-  end },
+  notify = {
+    warn = function(message)
+      warning = message
+    end,
+  },
+  picker = {
+    projects = function(opts)
+      selected = opts
+    end,
+  },
+}
+package.loaded["workbench.compatibility"] = {
+  observe = function(client_name, feature, source_name)
+    table.insert(observed, table.concat({ client_name, feature, source_name }, "/"))
+  end,
 }
 package.loaded["workbench.client"] = {
   request = function(_, callback)
@@ -63,11 +92,17 @@ package.loaded["workbench.client"] = {
 }
 package.loaded["workbench.projects"] = nil
 require("workbench.projects").pick()
-if not selected or selected.projects[1] ~= "/tmp/alpha" or warning then
+if
+  not selected
+  or selected.projects[1] ~= "/tmp/alpha"
+  or warning
+  or observed[#observed] ~= "nvim/projects/workbench"
+then
   error("Workbench project picker did not use wb data")
 end
 
 selected = nil
+warning = nil
 package.loaded["workbench.client"] = {
   request = function(_, callback)
     callback(nil, {}, "fixture wb failure")
@@ -75,12 +110,30 @@ package.loaded["workbench.client"] = {
 }
 package.loaded["workbench.binbox"] = {
   projects = function(callback)
+    callback({ "/tmp/binbox" }, nil)
+  end,
+}
+package.loaded["workbench.projects"] = nil
+require("workbench.projects").pick()
+if not selected or selected.projects[1] ~= "/tmp/binbox" or observed[#observed] ~= "nvim/projects/binbox" then
+  error("binbox project fallback was not observed")
+end
+
+selected = nil
+warning = nil
+package.loaded["workbench.binbox"] = {
+  projects = function(callback)
     callback(nil, "fixture binbox failure")
   end,
 }
 package.loaded["workbench.projects"] = nil
 require("workbench.projects").pick()
-if not selected or type(selected.dev) ~= "table" or not warning:match("sessionizer fallback") then
+if
+  not selected
+  or type(selected.dev) ~= "table"
+  or not warning:match("sessionizer fallback")
+  or observed[#observed] ~= "nvim/projects/sessionizer"
+then
   error("legacy sessionizer fallback was not selected")
 end
 
