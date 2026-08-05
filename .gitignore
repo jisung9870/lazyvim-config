@@ -4,6 +4,7 @@
 # Neovim 런타임 생성 파일
 spell/
 .luarc.json
+nvim.log
 lua/config/local.lua
 CLAUDE.local.md
 .claude/settings.local.json
