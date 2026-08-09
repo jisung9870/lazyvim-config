@@ -335,12 +335,10 @@ require_supported_linux() {
   . /etc/os-release
 
   case "${ID:-}" in
-    ubuntu | debian)
-      ;;
+    ubuntu | debian) ;;
     *)
       case " ${ID_LIKE:-} " in
-        *" debian "*)
-          ;;
+        *" debian "*) ;;
         *)
           error "지원 대상은 Ubuntu/Debian 계열 Linux입니다. 현재: ${PRETTY_NAME:-unknown}"
           ;;
