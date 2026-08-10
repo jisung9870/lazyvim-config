@@ -138,7 +138,7 @@ ok "symlink helper 단위 테스트 통과"
 if command -v nvim >/dev/null 2>&1; then
   info "nvim headless 검사"
   XDG_STATE_HOME="$tmp_dir/state" XDG_CACHE_HOME="$tmp_dir/cache" nvim --headless '+qa'
-  nvim --headless -u NONE -l "$SCRIPT_DIR/scripts/workbench-client-smoke.lua"
+  nvim --headless -u NONE -l "$SCRIPT_DIR/scripts/binbox-client-smoke.lua"
   ok "nvim headless 통과"
 else
   warn "nvim 없음: headless 검사 건너뜀"

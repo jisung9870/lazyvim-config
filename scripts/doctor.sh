@@ -106,7 +106,7 @@ fi
 
 section "asdf runtimes"
 check_required_cmd asdf
-for tool in golang nodejs python; do check_asdf_tool "$tool"; done
+for tool in golang nodejs python shfmt; do check_asdf_tool "$tool"; done
 for command_name in go node npm python; do check_required_cmd "$command_name"; done
 
 section "Editor and DevOps tools"

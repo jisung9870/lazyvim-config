@@ -117,8 +117,8 @@ mental model:
   - bb가 없거나 timeout/schema 오류가 나면
     `~/.config/tmux-sessionizer/dirs`를 직접 파싱한다.
   - JSON API와 fallback은 같은 sessionizer 후보 규칙을 사용한다.
-  - 남아 있는 Workbench agent/worktree/doctor picker는 호환 기간에만
-    유지하며 `:help nvim-workbench`에 기록한다.
+  - Agent/worktree lifecycle은 Orca가 소유하며 LazyVim은 project 경로만
+    `bb`에서 읽는다. 자세한 계약은 `:help nvim-binbox`를 참고한다.
 
 ==============================================================================
 화면 텍스트 복사 (extrakto)                       *nvim-terminal-tmux-extrakto*

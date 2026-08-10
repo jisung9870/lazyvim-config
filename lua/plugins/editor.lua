@@ -84,7 +84,7 @@ return {
   {
     "folke/snacks.nvim",
     init = function()
-      require("workbench").setup()
+      require("binbox").setup()
     end,
     opts = function(_, opts)
       opts.picker = opts.picker or {}
@@ -114,7 +114,7 @@ return {
       {
         "<leader>fp",
         function()
-          require("workbench.projects").pick()
+          require("binbox.projects").pick()
         end,
         desc = "Projects",
       },

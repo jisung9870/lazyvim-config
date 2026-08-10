@@ -29,6 +29,7 @@ TMP_DIR="${TMPDIR:-/tmp}"
 GOLANG_VERSION="$(read_tool_version golang)"
 NODEJS_VERSION="$(read_tool_version nodejs)"
 PYTHON_VERSION="$(read_tool_version python)"
+SHFMT_VERSION="$(read_tool_version shfmt)"
 
 APT_PACKAGES=(
   build-essential
@@ -204,23 +205,14 @@ check_runtime_state() {
   check_asdf_tool "golang" "$GOLANG_VERSION" || true
   check_asdf_tool "nodejs" "$NODEJS_VERSION" || true
   check_asdf_tool "python" "$PYTHON_VERSION" || true
+  check_asdf_tool "shfmt" "$SHFMT_VERSION" || true
 }
 
 install_runtime_tools() {
   install_asdf_tool "golang" "$GOLANG_VERSION" "wsl"
   install_asdf_tool "nodejs" "$NODEJS_VERSION" "wsl"
   install_asdf_tool "python" "$PYTHON_VERSION" "wsl"
-}
-
-ensure_shfmt() {
-  if has_cmd shfmt; then
-    ok "shfmt 이미 설치됨"
-  elif [ "$INSTALL" = true ]; then
-    run_step "shfmt 설치" go install mvdan.cc/sh/v3/cmd/shfmt@latest
-    run_step "asdf golang reshim" asdf reshim golang
-  else
-    warn "shfmt 없음 (--install 사용 시 설치)"
-  fi
+  install_asdf_tool "shfmt" "$SHFMT_VERSION" "wsl"
 }
 
 stylua_asset_arch() {
@@ -454,13 +446,11 @@ check_runtime_state
 
 if [ "$INSTALL" = true ]; then
   install_runtime_tools
-  ensure_shfmt
   ensure_stylua
   install_npm_packages
   install_devops_tools
   install_go_tools
 else
-  ensure_shfmt
   ensure_stylua
   check_cmd npm "npm" || true
   check_cmd go "go" || true
@@ -488,7 +478,7 @@ fi
 echo -e "${GREEN}========================================${NC}"
 echo ""
 echo "버전 기준:"
-echo "  Go $GOLANG_VERSION / Node.js $NODEJS_VERSION / Python $PYTHON_VERSION / Neovim $NVIM_VERSION / Arch $ARCH"
+echo "  Go $GOLANG_VERSION / Node.js $NODEJS_VERSION / Python $PYTHON_VERSION / shfmt $SHFMT_VERSION / Neovim $NVIM_VERSION / Arch $ARCH"
 echo ""
 echo "asdf 현재 상태:"
 asdf current 2>/dev/null || true

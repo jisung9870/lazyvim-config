@@ -48,11 +48,11 @@ n / N                  다음/이전 검색 결과로 이동, 화면 중앙 유�
 Tip:
   정확한 검색 키가 기억나지 않으면 `<leader>s`까지 누르고 which-key를 본다.
 
-Workbench command:
-  :WorkbenchProjects    등록 project picker
-  :WorkbenchAgents      Agent task picker와 details/jump/stop
-  :WorkbenchWorktrees   linked worktree picker
-  :WorkbenchDoctor      capability와 recovery picker
+Binbox command:
+  :BinboxProjects       등록 project picker
+
+Agent/worktree lifecycle은 Orca에서 관리한다. LazyVim은 별도 lifecycle
+command나 dashboard를 제공하지 않는다.
 
 Explorer:
   <CR> / l             파일 열기 또는 디렉토리 toggle

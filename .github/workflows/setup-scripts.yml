@@ -18,7 +18,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y shellcheck
-          go install mvdan.cc/sh/v3/cmd/shfmt@latest
+          go install mvdan.cc/sh/v3/cmd/shfmt@v3.13.1
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
       - name: Bash syntax
@@ -66,8 +66,8 @@ jobs:
           nvim --headless -u NONE --cmd "set rtp+=." "+helptags doc" "+h lazyvim-cheatsheet" +qa
           git diff --exit-code doc/tags
 
-      - name: Workbench client smoke
-        run: nvim --headless -u NONE -l scripts/workbench-client-smoke.lua
+      - name: Binbox client smoke
+        run: nvim --headless -u NONE -l scripts/binbox-client-smoke.lua
 
       - name: test-setup.sh
         run: ./scripts/test-setup.sh

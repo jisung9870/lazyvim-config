@@ -1,12 +1,12 @@
 local M = {}
 
-local function legacy_picker(reason)
+local function sessionizer_picker(reason)
   Snacks.notify.warn(("bb project API unavailable; using sessionizer fallback: %s"):format(reason))
   Snacks.picker.projects({ dev = require("config.sessionizer").dev_roots() })
 end
 
 function M.list(callback)
-  require("workbench.binbox").projects(function(paths, err)
+  require("binbox.client").projects(function(paths, err)
     callback(paths, {}, err)
   end)
 end
@@ -14,7 +14,7 @@ end
 function M.pick()
   M.list(function(paths, _, err)
     if not paths then
-      legacy_picker(err or "unknown error")
+      sessionizer_picker(err or "unknown error")
       return
     end
     Snacks.picker.projects({ projects = paths, dev = {}, recent = false })

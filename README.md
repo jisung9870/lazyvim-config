@@ -12,7 +12,7 @@ lua/
 │   ├── keymaps.lua     # 커스텀 키맵
 │   ├── autocmds.lua    # 파일 타입 감지 (Alloy, Nginx, Ansible)
 │   └── local.lua       # 머신별 설정 (git 미추적)
-├── workbench/          # bb Project client와 호환용 wb Agent/Worktree/Doctor picker
+├── binbox/             # bb JSON project client와 picker
 ├── plugins/
 │   ├── colorscheme.lua # Catppuccin Mocha
 │   ├── editor.lua      # 한/영 전환 (macOS), Telescope, Snacks picker 제외
@@ -51,9 +51,8 @@ symlink라서 pull 후 내용이 바로 반영되며, 실행 중인 서버에는
 Project picker(`<leader>fp`, `:BinboxProjects`)는 `bb tm projects --json`을
 비동기로 호출합니다. bb가 없거나 응답 schema/timeout 검증에 실패할 때만
 `~/.config/tmux-sessionizer/dirs`를 읽는 호환 fallback을 사용합니다.
-`:WorkbenchProjects`는 전환 기간의 명령 alias입니다. Agent/worktree/doctor
-picker는 bb로 이관하지 않으며, 남아 있는 Workbench UI는 호환 기간 후 Orca
-소유 경계에 맞춰 별도로 retire합니다.
+Workbench project alias와 Agent/worktree/doctor UI는 제거했습니다. Agent와
+worktree lifecycle은 Orca가 소유하며 LazyVim은 이를 복제하지 않습니다.
 
 이 repo의 설정과 symlink 계약은 bb에서 비파괴적으로 확인할 수 있습니다.
 
@@ -74,7 +73,7 @@ bb doctor nvim --config-dir "$PWD" --headless --json
 - `:help nvim-devops-workflow`: YAML, Terraform, Ansible 등 DevOps 작업 흐름
 - `:help nvim-python-go`: Python/Go 개발 흐름
 - `:help nvim-terminal-tmux`: 터미널/tmux 연동과 tmux 설정 관리
-- `:help nvim-workbench`: bb project picker와 호환용 Workbench UI
+- `:help nvim-binbox`: bb project picker, schema 검증, fallback
 - `:help nvim-troubleshooting`: 문제 해결 순서
 
 문서 목록은 Neovim 안에서 `:HelpDocs` 또는 `<leader>h?`로 열 수 있습니다.
@@ -147,12 +146,13 @@ vim.g.clipboard = {
 
 ### asdf와 버전
 
-Go/Node.js/Python은 asdf로 관리하며, repo 루트의 `.tool-versions`를 기준으로 설치합니다.
+Go/Node.js/Python/shfmt는 asdf로 관리하며, repo 루트의 `.tool-versions`를 기준으로 설치합니다.
 
 ```bash
 golang 1.25.12
 nodejs 24.15.0
 python 3.13.1
+shfmt 3.13.1
 ```
 
 setup 스크립트는 asdf 자체를 자동 설치하지 않습니다.
@@ -202,7 +202,7 @@ shell lint(shellcheck/shfmt), `stylua --check lua/`, help tag 빌드와 `doc/tag
 | tflint | Mason 또는 `brew install tflint` | GitHub release | Terraform 린트 |
 | hadolint | Mason 또는 `brew install hadolint` | GitHub release | Dockerfile 린트 |
 | prettier | `npm i -g prettier` | 동일 | YAML/JSON 포맷 |
-| shfmt | `brew install shfmt` | `apt install shfmt` | Shell 포맷 |
+| shfmt | `asdf install shfmt` | 동일 | Shell 포맷 |
 | bash-language-server | Mason 자동 | 동일 | Shell LSP (bashls) |
 | shellcheck | Mason 또는 `brew install shellcheck` | `apt install shellcheck` | Shell 진단 (bashls 연동) |
 | stylua | `brew install stylua` | cargo/GitHub release | Lua 포맷 |

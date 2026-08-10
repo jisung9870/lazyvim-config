@@ -79,4 +79,6 @@ function M.projects(callback)
   end)
 end
 
+M._project_paths = project_paths
+
 return M

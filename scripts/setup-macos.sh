@@ -20,6 +20,7 @@ sync_plugins
 GOLANG_VERSION="$(read_tool_version golang)"
 NODEJS_VERSION="$(read_tool_version nodejs)"
 PYTHON_VERSION="$(read_tool_version python)"
+SHFMT_VERSION="$(read_tool_version shfmt)"
 
 BREW_PACKAGES=(
   neovim
@@ -35,7 +36,6 @@ BREW_PACKAGES=(
 )
 
 FORMATTER_PACKAGES=(
-  shfmt
   stylua
   shellcheck
 )
@@ -103,12 +103,14 @@ check_runtime_state() {
   check_asdf_tool "golang" "$GOLANG_VERSION" || true
   check_asdf_tool "nodejs" "$NODEJS_VERSION" || true
   check_asdf_tool "python" "$PYTHON_VERSION" || true
+  check_asdf_tool "shfmt" "$SHFMT_VERSION" || true
 }
 
 install_runtime_tools() {
   install_asdf_tool "golang" "$GOLANG_VERSION" "macos"
   install_asdf_tool "nodejs" "$NODEJS_VERSION" "macos"
   install_asdf_tool "python" "$PYTHON_VERSION" "macos"
+  install_asdf_tool "shfmt" "$SHFMT_VERSION" "macos"
 }
 
 install_npm_packages() {
@@ -287,7 +289,7 @@ fi
 echo -e "${GREEN}========================================${NC}"
 echo ""
 echo "버전 기준:"
-echo "  Go $GOLANG_VERSION / Node.js $NODEJS_VERSION / Python $PYTHON_VERSION / Neovim $NVIM_VERSION"
+echo "  Go $GOLANG_VERSION / Node.js $NODEJS_VERSION / Python $PYTHON_VERSION / shfmt $SHFMT_VERSION / Neovim $NVIM_VERSION"
 echo ""
 echo "asdf 현재 상태:"
 asdf current 2>/dev/null || true

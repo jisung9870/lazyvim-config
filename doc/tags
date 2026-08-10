@@ -10,6 +10,11 @@ lazyvim-cheatsheet-title	lazyvim-cheatsheet.txt	/*lazyvim-cheatsheet-title*
 lazyvim-cheatsheet-tools	lazyvim-cheatsheet.txt	/*lazyvim-cheatsheet-tools*
 lazyvim-cheatsheet-ui	lazyvim-cheatsheet.txt	/*lazyvim-cheatsheet-ui*
 lazyvim-cheatsheet-window	lazyvim-cheatsheet.txt	/*lazyvim-cheatsheet-window*
+nvim-binbox	nvim-binbox.txt	/*nvim-binbox*
+nvim-binbox-commands	nvim-binbox.txt	/*nvim-binbox-commands*
+nvim-binbox-fallback	nvim-binbox.txt	/*nvim-binbox-fallback*
+nvim-binbox-security	nvim-binbox.txt	/*nvim-binbox-security*
+nvim-binbox-title	nvim-binbox.txt	/*nvim-binbox-title*
 nvim-devops-workflow	nvim-devops-workflow.txt	/*nvim-devops-workflow*
 nvim-devops-workflow-alloy	nvim-devops-workflow.txt	/*nvim-devops-workflow-alloy*
 nvim-devops-workflow-ansible	nvim-devops-workflow.txt	/*nvim-devops-workflow-ansible*
@@ -66,8 +71,3 @@ nvim-troubleshooting-order	nvim-troubleshooting.txt	/*nvim-troubleshooting-order
 nvim-troubleshooting-os	nvim-troubleshooting.txt	/*nvim-troubleshooting-os*
 nvim-troubleshooting-plugin	nvim-troubleshooting.txt	/*nvim-troubleshooting-plugin*
 nvim-troubleshooting-title	nvim-troubleshooting.txt	/*nvim-troubleshooting-title*
-nvim-workbench	nvim-workbench.txt	/*nvim-workbench*
-nvim-workbench-commands	nvim-workbench.txt	/*nvim-workbench-commands*
-nvim-workbench-fallback	nvim-workbench.txt	/*nvim-workbench-fallback*
-nvim-workbench-security	nvim-workbench.txt	/*nvim-workbench-security*
-nvim-workbench-title	nvim-workbench.txt	/*nvim-workbench-title*

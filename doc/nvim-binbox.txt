@@ -1,0 +1,42 @@
+*nvim-binbox*                  binbox-cli client for this LazyVim config
+
+Binbox Client                                             *nvim-binbox-title*
+
+이 설정은 `bb tm projects --json`을 비동기로 호출한다. Neovim은 project,
+tmux session, Agent, worktree lifecycle의 source of truth가 아니며 bb state
+file을 직접 읽지 않는다.
+
+==============================================================================
+명령                                                   *nvim-binbox-commands*
+
+  :BinboxProjects
+      bb에 등록된 project를 Snacks project picker로 연다. `<leader>fp`도
+      같은 기능이다.
+
+Workbench project alias와 Agent/worktree/doctor command는 퇴역했다. Agent와
+worktree lifecycle은 Orca에서 관리한다.
+
+==============================================================================
+비동기와 fallback                                     *nvim-binbox-fallback*
+
+Project read request는 shell 문자열이 아닌 argument array를 사용한다.
+>
+  bb tm projects --json
+<
+
+UI thread를 block하지 않으며 timeout은 5초다. JSON `schema_version`이 client와
+다르면 binbox-cli와 LazyVim을 함께 갱신하라는 오류를 표시한다.
+
+`bb`가 없거나 timeout/schema 검증에 실패하면
+`~/.config/tmux-sessionizer/dirs`를 직접 파싱한다. 이 fallback은 호환 기간의
+read-only source이며 bb registry를 변경하지 않는다.
+
+==============================================================================
+보안 경계                                              *nvim-binbox-security*
+
+- command는 argument array로 전달하며 shell 문자열을 만들지 않는다.
+- picker에서 arbitrary command나 lifecycle mutation을 입력받지 않는다.
+- machine-local project path는 화면에만 표시하고 config에 복사하지 않는다.
+- Agent, worktree, scheduler, DAG, terminal lifecycle은 Orca가 소유한다.
+
+vim:tw=78:ts=8:ft=help:norl:
