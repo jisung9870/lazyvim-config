@@ -113,11 +113,12 @@ Neovim project picker:
 mental model:
   - session을 새로 만들거나 바꿀 때는 `bb tm`을 쓴다.
   - Neovim 안에서 파일/grep/explorer를 열 때는 `<leader>fp`를 쓴다.
-  - `<leader>fp`는 `wb projects list --json`을 비동기로 호출한다.
-  - wb가 없거나 timeout/schema 오류가 나면 `bb tm projects --json`,
-    `~/.config/tmux-sessionizer/dirs` 직접 파싱 순서로 fallback한다.
+  - `<leader>fp`는 `bb tm projects --json`을 비동기로 호출한다.
+  - bb가 없거나 timeout/schema 오류가 나면
+    `~/.config/tmux-sessionizer/dirs`를 직접 파싱한다.
   - JSON API와 fallback은 같은 sessionizer 후보 규칙을 사용한다.
-  - Agent/worktree/doctor picker는 `:help nvim-workbench`를 참고한다.
+  - 남아 있는 Workbench agent/worktree/doctor picker는 호환 기간에만
+    유지하며 `:help nvim-workbench`에 기록한다.
 
 ==============================================================================
 화면 텍스트 복사 (extrakto)                       *nvim-terminal-tmux-extrakto*

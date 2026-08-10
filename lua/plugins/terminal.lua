@@ -68,7 +68,7 @@ return {
             direction = "float",
             close_on_exit = true,
             hidden = true,
-            -- 전역 on_open(ESC 매핑)을 덮어써서 ESC가 내부 fzf로 전달되게 함
+            -- 전역 on_open(ESC 매핑)을 덮어써서 ESC가 bb 선택기로 전달되게 함
             on_open = function() end,
           }):toggle()
         end,

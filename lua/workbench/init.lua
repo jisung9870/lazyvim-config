@@ -6,6 +6,7 @@ function M.setup()
   end
   M._configured = true
   for name, module in pairs({
+    BinboxProjects = "projects",
     WorkbenchProjects = "projects",
     WorkbenchAgents = "agents",
     WorkbenchWorktrees = "worktrees",

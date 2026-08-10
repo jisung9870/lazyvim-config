@@ -12,7 +12,7 @@ lua/
 │   ├── keymaps.lua     # 커스텀 키맵
 │   ├── autocmds.lua    # 파일 타입 감지 (Alloy, Nginx, Ansible)
 │   └── local.lua       # 머신별 설정 (git 미추적)
-├── workbench/          # wb JSON client와 Project/Agent/Worktree/Doctor picker
+├── workbench/          # bb Project client와 호환용 wb Agent/Worktree/Doctor picker
 ├── plugins/
 │   ├── colorscheme.lua # Catppuccin Mocha
 │   ├── editor.lua      # 한/영 전환 (macOS), Telescope, Snacks picker 제외
@@ -46,6 +46,22 @@ tmux 설정도 이 repo에서 관리합니다. `~/.tmux.conf`는 `scripts/config
 symlink라서 pull 후 내용이 바로 반영되며, 실행 중인 서버에는 `prefix r`로 리로드합니다.
 자세한 규칙은 `:help nvim-terminal-tmux` 참고.
 
+## binbox-cli 연동
+
+Project picker(`<leader>fp`, `:BinboxProjects`)는 `bb tm projects --json`을
+비동기로 호출합니다. bb가 없거나 응답 schema/timeout 검증에 실패할 때만
+`~/.config/tmux-sessionizer/dirs`를 읽는 호환 fallback을 사용합니다.
+`:WorkbenchProjects`는 전환 기간의 명령 alias입니다. Agent/worktree/doctor
+picker는 bb로 이관하지 않으며, 남아 있는 Workbench UI는 호환 기간 후 Orca
+소유 경계에 맞춰 별도로 retire합니다.
+
+이 repo의 설정과 symlink 계약은 bb에서 비파괴적으로 확인할 수 있습니다.
+
+```bash
+bb setup nvim --config-dir "$PWD" --dry-run --json
+bb doctor nvim --config-dir "$PWD" --headless --json
+```
+
 ## 운영 가이드
 
 작업 규칙은 루트 문서와 Neovim help로 나눠 관리합니다.
@@ -58,7 +74,7 @@ symlink라서 pull 후 내용이 바로 반영되며, 실행 중인 서버에는
 - `:help nvim-devops-workflow`: YAML, Terraform, Ansible 등 DevOps 작업 흐름
 - `:help nvim-python-go`: Python/Go 개발 흐름
 - `:help nvim-terminal-tmux`: 터미널/tmux 연동과 tmux 설정 관리
-- `:help nvim-workbench`: Workbench picker, 비동기/fallback, 안전한 action
+- `:help nvim-workbench`: bb project picker와 호환용 Workbench UI
 - `:help nvim-troubleshooting`: 문제 해결 순서
 
 문서 목록은 Neovim 안에서 `:HelpDocs` 또는 `<leader>h?`로 열 수 있습니다.

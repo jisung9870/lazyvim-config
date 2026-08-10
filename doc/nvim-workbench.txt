@@ -2,15 +2,17 @@
 
 Workbench Client                                  *nvim-workbench-title*
 
-이 설정은 `wb`의 versioned JSON command를 비동기로 호출한다. Neovim은
-project, Agent, worktree, doctor state의 source of truth가 아니며 state file을
-직접 읽지 않는다.
+이 설정은 project에는 `bb`, 호환용 Agent/worktree/doctor UI에는 `wb`의
+versioned JSON command를 비동기로 호출한다. Neovim은 어느 lifecycle이나
+state의 source of truth도 아니며 bb/Workbench state file을 직접 읽지 않는다.
 
 ==============================================================================
 명령                                                *nvim-workbench-commands*
 
+  :BinboxProjects
   :WorkbenchProjects
-      등록 project를 Snacks project picker로 연다. `<leader>fp`도 같은 기능이다.
+      bb에 등록된 project를 Snacks project picker로 연다. 이전 Workbench
+      명령 이름은 호환 alias이며 `<leader>fp`도 같은 기능이다.
 
   :WorkbenchAgents
       등록된 Codex/Claude task를 고르고 details, jump, stop action을 실행한다.
@@ -30,22 +32,22 @@ default keymap을 추가하지 않는다.
 
 모든 read request는 다음과 같은 argument array를 사용한다.
 >
-  wb projects list --json
+  bb tm projects --json
   wb agents list --json
   wb worktrees list <project-id> --json
   wb doctor --json
 <
 
 UI thread를 block하지 않으며 기본 timeout은 5초다. JSON `schema_version`이
-client와 다르면 Workbench와 LazyVim을 함께 갱신하라는 오류를 표시한다.
+client와 다르면 해당 CLI와 LazyVim을 함께 갱신하라는 오류를 표시한다.
 
-`wb` project API가 없거나 실패하면 다음 순서로 fallback한다.
+`bb` project API가 없거나 실패하면 다음 source로 fallback한다.
 
-1. `bb tm projects --json`
-2. `~/.config/tmux-sessionizer/dirs`
+1. `~/.config/tmux-sessionizer/dirs`
 
-Agent, worktree, doctor에는 legacy state parser를 만들지 않는다. `wb`가 없으면
-명확한 unavailable 알림을 표시한다.
+Project의 기본 authority는 bb이며 Workbench compatibility journal에는 project
+source를 기록하지 않는다. Agent, worktree, doctor에는 legacy state parser를
+만들지 않는다. `wb`가 없으면 명확한 unavailable 알림을 표시한다.
 
 ==============================================================================
 보안 경계                                           *nvim-workbench-security*

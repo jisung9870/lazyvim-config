@@ -67,7 +67,6 @@ vim.fn.delete(temp_dir, "rf")
 
 local selected
 local warning
-local observed = {}
 Snacks = {
   notify = {
     warn = function(message)
@@ -80,34 +79,6 @@ Snacks = {
     end,
   },
 }
-package.loaded["workbench.compatibility"] = {
-  observe = function(client_name, feature, source_name)
-    table.insert(observed, table.concat({ client_name, feature, source_name }, "/"))
-  end,
-}
-package.loaded["workbench.client"] = {
-  request = function(_, callback)
-    callback({ projects = { { id = "alpha", path = "/tmp/alpha" } } }, {}, nil)
-  end,
-}
-package.loaded["workbench.projects"] = nil
-require("workbench.projects").pick()
-if
-  not selected
-  or selected.projects[1] ~= "/tmp/alpha"
-  or warning
-  or observed[#observed] ~= "nvim/projects/workbench"
-then
-  error("Workbench project picker did not use wb data")
-end
-
-selected = nil
-warning = nil
-package.loaded["workbench.client"] = {
-  request = function(_, callback)
-    callback(nil, {}, "fixture wb failure")
-  end,
-}
 package.loaded["workbench.binbox"] = {
   projects = function(callback)
     callback({ "/tmp/binbox" }, nil)
@@ -115,8 +86,8 @@ package.loaded["workbench.binbox"] = {
 }
 package.loaded["workbench.projects"] = nil
 require("workbench.projects").pick()
-if not selected or selected.projects[1] ~= "/tmp/binbox" or observed[#observed] ~= "nvim/projects/binbox" then
-  error("binbox project fallback was not observed")
+if not selected or selected.projects[1] ~= "/tmp/binbox" or warning then
+  error("project picker did not use binbox data")
 end
 
 selected = nil
@@ -128,18 +99,19 @@ package.loaded["workbench.binbox"] = {
 }
 package.loaded["workbench.projects"] = nil
 require("workbench.projects").pick()
-if
-  not selected
-  or type(selected.dev) ~= "table"
-  or not warning:match("sessionizer fallback")
-  or observed[#observed] ~= "nvim/projects/sessionizer"
-then
+if not selected or type(selected.dev) ~= "table" or not warning:match("sessionizer fallback") then
   error("legacy sessionizer fallback was not selected")
 end
 
 require("workbench").setup()
 local commands = vim.api.nvim_get_commands({})
-for _, name in ipairs({ "WorkbenchProjects", "WorkbenchAgents", "WorkbenchWorktrees", "WorkbenchDoctor" }) do
+for _, name in ipairs({
+  "BinboxProjects",
+  "WorkbenchProjects",
+  "WorkbenchAgents",
+  "WorkbenchWorktrees",
+  "WorkbenchDoctor",
+}) do
   if not commands[name] then
     error(name .. " command was not registered")
   end
